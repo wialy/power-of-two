@@ -1,0 +1,27 @@
+.entity {
+	transition-property: transform;
+	transition-timing-function: linear;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+}
+
+.background {
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	font-weight: bold;
+	line-height: 1;
+	transition-property: all;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.symbol {
+	transition-property: all;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
