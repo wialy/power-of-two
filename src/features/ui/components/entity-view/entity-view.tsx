@@ -84,7 +84,13 @@ const getSymbolColor = (entity: Entity) => {
 	return DIRECTION_COLOR;
 };
 
-export const EntityView = ({ entity }: { entity: Entity }) => {
+export const EntityView = ({
+	entity,
+	scale,
+}: {
+	entity: Entity;
+	scale?: number;
+}) => {
 	const [isAdded, setIsAdded] = useState(false);
 
 	const backgroundColor = getBackgroundColor(entity);
@@ -126,13 +132,19 @@ export const EntityView = ({ entity }: { entity: Entity }) => {
 	const symbol = getSymbol(entity);
 	const symbolColor = getSymbolColor(entity);
 
+	let transform = `translate(${entity.position.x * TILE_SIZE}px, ${
+		entity.position.y * TILE_SIZE
+	}px)`;
+
+	if (scale !== undefined) {
+		transform += ` scale(${scale})`;
+	}
+
 	return (
 		<div
 			className={$$.entity}
 			style={{
-				transform: `translate(${entity.position.x * TILE_SIZE}px, ${
-					entity.position.y * TILE_SIZE
-				}px)`,
+				transform,
 				transitionDuration: `${Number(MOVE_DURATION)}ms`,
 				willChange: isMovable(entity) ? 'transform' : undefined,
 			}}
