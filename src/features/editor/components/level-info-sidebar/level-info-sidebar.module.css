@@ -1,0 +1,14 @@
+.container {
+	background-color: black;
+	padding: 2em;
+	color: gray;
+	min-width: 280px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+	flex-direction: column;
+}
+
+.solution {
+	font-size: 2em;
+}
