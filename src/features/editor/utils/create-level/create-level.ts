@@ -20,9 +20,7 @@ export const createLevel = ({
 
 	const result: Entity[] = [];
 
-	const shuffledEntities = availableEntities.sort(() => getRandom() - 0.5);
-
-	const floors = shuffledEntities.filter(isFloor);
+	const floors = availableEntities.filter(isFloor).sort(() => getRandom() - 0.5);
 
 	const directors = floors.filter((entity) => entity.direction !== undefined);
 	const otherFloors = floors.filter((entity) => entity.direction === undefined);
@@ -152,9 +150,9 @@ export const createLevel = ({
 		.map((entity) => entity.position)
 		.sort(() => getRandom() - 0.5);
 
-	const movables = shuffledEntities.filter(
-		(entity) => entity.type === 'movable' || entity.type === 'dice',
-	);
+	const movables = availableEntities
+		.filter((entity) => entity.type === 'movable' || entity.type === 'dice')
+		.sort(() => getRandom() - 0.5);
 
 	for (const [movableIndex, movable] of movables.entries()) {
 		const position: Vector = floorPositions[movableIndex];
