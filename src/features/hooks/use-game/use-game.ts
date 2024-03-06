@@ -1,34 +1,57 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Entity } from '../../engine/types/entities';
 import { Level } from '../../engine/types/game';
 import { getNextBoardState } from '../../engine/utils/get-next-board-state';
-import { MOVE_DURATION } from '../../ui/components/constants';
+import { getShouldUpdate } from '../../engine/utils/get-should-update';
+import { MOVE_DURATION } from '../../ui/constants';
 
 export const useGame = ({
 	disabled,
-	level: { board },
+	level: { entities: boardEntities },
 }: {
 	disabled?: boolean;
 	level: Level;
 }) => {
-	const [entities, setEntities] = useState<Entity[]>([...board.entities]);
+	const [entities, setEntities] = useState<Entity[]>([...boardEntities]);
+	const [hash, setHash] = useState('');
+	const [isLocked, setIsLocked] = useState(false);
+
+	const intervalReference = useRef<ReturnType<typeof setInterval>>();
 
 	useEffect(() => {
 		if (disabled) return;
 
-		const interval = setInterval(() => {
-			setEntities((previousEntities) => {
-				const nextBoardState = getNextBoardState({
-					board: { entities: previousEntities },
-				});
+		intervalReference.current = setInterval(
+			() =>
+				setEntities((previousEntities) => {
+					const nextEntities = getNextBoardState({
+						board: { entities: previousEntities },
+					}).board.entities;
 
-				return nextBoardState.board.entities;
-			});
-		}, MOVE_DURATION);
+					if (getShouldUpdate({ entities: nextEntities, previousEntities })) {
+						setIsLocked(true);
 
-		return () => clearInterval(interval);
-	}, [disabled]);
+						return nextEntities;
+					}
 
-	return { entities, setEntities };
+					setIsLocked(false);
+
+					return previousEntities.map((entity) => ({
+						...entity,
+						isFresh: false,
+					}));
+				}),
+			MOVE_DURATION,
+		);
+
+		return () => clearInterval(intervalReference.current);
+	}, [disabled, hash]);
+
+	useEffect(() => {
+		setHash(JSON.stringify([...boardEntities]));
+		setEntities([...boardEntities]);
+	}, [boardEntities]);
+
+	return { entities, isLocked, setEntities };
 };

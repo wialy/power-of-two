@@ -8,7 +8,6 @@ import {
 	VECTOR_UP,
 } from '../../engine/constants';
 import { Entity, isMovable, Vector } from '../../engine/types/entities';
-import { getHasMovingEntities } from '../../engine/utils/get-has-moving-entities';
 
 const KEY_TO_VELOCITY_VECTOR: Record<string, Vector> = {
 	ArrowDown: VECTOR_DOWN,
@@ -35,18 +34,18 @@ export const useControls = ({
 		(velocity?: { x: number; y: number }) => {
 			if (!velocity) return;
 
-			setEntities((entities) => {
-				if (getHasMovingEntities(entities)) return entities;
-
-				return entities.map((entity) =>
+			setEntities((entities) =>
+				entities.map((entity) =>
 					isMovable(entity)
 						? {
 								...entity,
+								isForced: true,
+								isFresh: false,
 								velocity: { ...velocity },
 							}
 						: entity,
-				);
-			});
+				),
+			);
 		},
 		[setEntities],
 	);
