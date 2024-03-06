@@ -73,11 +73,11 @@ export const getNextBoardState = ({
 }: {
 	board: Board;
 }): { board: Board } => {
-	const enabledEntities = getClone(
+	const entities = getClone(
 		board.entities.filter((entity) => !entity.isRemoved),
 	);
 
-	const { floors, movables, others } = getByType(enabledEntities);
+	const { floors, movables, others } = getByType(entities);
 
 	const toResolve = movables.filter(getIsMoving);
 
