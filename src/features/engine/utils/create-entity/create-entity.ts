@@ -10,6 +10,8 @@ type ConfigByType = {
 	movable: Config<Movable>;
 };
 
+export type EntityType = keyof ConfigByType;
+
 const DEFAULT_CONFIG: Record<
 	keyof ConfigByType,
 	() => ConfigByType[keyof ConfigByType]
