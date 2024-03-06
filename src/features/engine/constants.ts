@@ -5,3 +5,10 @@ export const VECTOR_UP: Vector = { x: 0, y: -1 };
 export const VECTOR_DOWN: Vector = { x: 0, y: 1 };
 export const VECTOR_LEFT: Vector = { x: -1, y: 0 };
 export const VECTOR_RIGHT: Vector = { x: 1, y: 0 };
+
+export const DIRECTIONS = [
+	VECTOR_UP,
+	VECTOR_DOWN,
+	VECTOR_LEFT,
+	VECTOR_RIGHT,
+] as const;

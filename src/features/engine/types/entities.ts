@@ -18,10 +18,9 @@ export const getIsVector = (value: unknown): value is Vector => {
 
 export type Entity = {
 	id: string;
-	// removed from the game, but still visible for the current frame
-	isFresh?: boolean;
 	// freshly merged dice, to prevent moving into the same position
-	isOnTarget?: boolean;
+	isFresh?: boolean;
+	// removed from the game, but still visible for the current frame
 	isRemoved?: boolean;
 	position: Vector;
 	type: string; // dice is on the target floor
@@ -29,9 +28,10 @@ export type Entity = {
 
 export type Movable = Entity & {
 	velocity: Vector;
+	isForced?: boolean;
 };
 
-export const isMovable = (entity: Entity): entity is Movable =>
+export const isMovable = (entity: Pick<Entity, 'type'>): entity is Movable =>
 	'velocity' in entity;
 
 export type Floor = Entity & {
@@ -41,13 +41,14 @@ export type Floor = Entity & {
 	type: 'floor';
 };
 
-export const isFloor = (entity: Entity): entity is Floor =>
+export const isFloor = (entity: Pick<Entity, 'type'>): entity is Floor =>
 	entity.type === 'floor';
 
 export type Dice = Movable & {
 	type: 'dice';
 	value: number;
+	isOnTarget?: boolean;
 };
 
-export const isDice = (entity: Entity): entity is Dice =>
+export const isDice = (entity: Pick<Entity, 'type'>): entity is Dice =>
 	entity.type === 'dice';
