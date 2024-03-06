@@ -1,4 +1,4 @@
 .area {
-	position: fixed;
+	position: absolute;
 	inset: 0;
 }
