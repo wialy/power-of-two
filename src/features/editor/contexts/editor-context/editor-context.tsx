@@ -5,6 +5,7 @@ import { Level } from '../../../engine/types/game';
 import { createEntity, EntityType } from '../../../engine/utils/create-entity';
 import { ENTITIES } from '../../constants';
 import { createLevel } from '../../utils/create-level';
+import { getLevelId } from '../../utils/get-level-id';
 
 type EntityRecord = { entity: Entity; quantity: number };
 
@@ -44,9 +45,15 @@ export const EditorContextProvider = ({
 				),
 		);
 
+		const levelEntities =
+			createLevel({
+				entities: availableEntities,
+				seed,
+			}) ?? [];
+
 		return {
-			entities: createLevel({ entities: availableEntities, seed }) ?? [],
-			id: '',
+			entities: levelEntities,
+			id: getLevelId({ entities: levelEntities }),
 		};
 	}, [entities, seed]);
 
