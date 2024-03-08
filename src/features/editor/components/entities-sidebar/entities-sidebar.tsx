@@ -4,11 +4,9 @@ import {
 	isFloor,
 	isMovable,
 } from '../../../engine/types/entities';
-import { Stepper } from '../../../ui/components/stepper';
 import { ENTITIES } from '../../constants';
 import { useEditorContext } from '../../contexts/editor-context';
 import { EditorEntityStepper } from '../editor-entity-stepper';
-import { EditorOption } from '../editor-option';
 import $$ from './entities-sidebar.module.css';
 
 const getIsSameEntity = (a: Entity, b: Entity) => {
@@ -28,7 +26,7 @@ const getIsSameEntity = (a: Entity, b: Entity) => {
 };
 
 export const EntitiesSidebar = () => {
-	const { entities, seed, setEntities, setSeed } = useEditorContext();
+	const { entities, setEntities } = useEditorContext();
 
 	// eslint-disable-next-line unicorn/consistent-function-scoping
 	const handleValueChange = (entity: Entity) => (value: number) => {
@@ -43,15 +41,6 @@ export const EntitiesSidebar = () => {
 
 	return (
 		<aside className={$$.container}>
-			<EditorOption
-				control={
-					<Stepper
-						initialValue={seed}
-						onValueChange={setSeed}
-					/>
-				}
-				icon={<div style={{ transform: 'translate(-50%, -50%)' }}>🎲</div>}
-			/>
 			{ENTITIES.map((entity, index) => (
 				<EditorEntityStepper
 					key={index}

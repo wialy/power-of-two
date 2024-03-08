@@ -7,8 +7,30 @@
 	justify-content: flex-start;
 	align-items: flex-start;
 	flex-direction: column;
+	gap: 1em;
 }
 
 .solution {
 	font-size: 2em;
+	font-family: monospace;
+}
+
+.id {
+	padding: 1em;
+	border-radius: 0.5em;
+	background-color: rgba(255, 255, 255, 0.1);
+	font-family: monospace;
+	display: flex;
+	gap: 1em;
+	align-items: center;
+}
+
+.summary {
+	display: flex;
+	gap: 1em;
+	white-space: pre;
+}
+
+.summary strong {
+	color: white;
 }
