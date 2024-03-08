@@ -1,5 +1,6 @@
 import { HTMLAttributes, useCallback, useEffect, useState } from 'react';
 
+import { Button } from '../button';
 import $$ from './stepper.module.css';
 
 export const Stepper = ({
@@ -22,6 +23,8 @@ export const Stepper = ({
 
 	const handleMinusClick = useCallback(() => {
 		setValue((previousValue) => {
+			if (previousValue === 0) return 0;
+
 			onValueChange?.(previousValue - 1);
 
 			return previousValue - 1;
@@ -40,20 +43,21 @@ export const Stepper = ({
 			<span className={[$$.value, value === 0 ? $$.zero : ''].join(' ')}>
 				{value}
 			</span>
-			<button
-				className={$$.button}
-				type="button"
-				onClick={handlePlusClick}
-			>
-				+
-			</button>
-			<button
-				className={$$.button}
+			<Button
+				disabled={value <= 0}
+				size="small"
 				type="button"
 				onClick={handleMinusClick}
 			>
 				-
-			</button>
+			</Button>
+			<Button
+				size="small"
+				type="button"
+				onClick={handlePlusClick}
+			>
+				+
+			</Button>
 		</div>
 	);
 };

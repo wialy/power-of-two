@@ -1,0 +1,37 @@
+.button {
+	appearance: none;
+	background: black;
+	border: 2px solid #242424;
+	padding: 0 1em;
+	color: white;
+	font-size: 16px;
+	cursor: pointer;
+	border-radius: 1em;
+	min-width: 3em;
+	height: 3em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.button:active:not(:disabled) {
+	background-color: #323232;
+	text-shadow: 0 0 10px white;
+}
+
+.button.small {
+	padding: 0 0.5em;
+	min-width: 2em;
+	height: 2em;
+}
+
+@media (hover: hover) {
+	.button:hover:not(:active):not(:disabled) {
+		background-color: #242424;
+	}
+}
+
+.button:disabled {
+	opacity: 0.25;
+	cursor: default;
+}
