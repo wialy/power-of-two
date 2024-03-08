@@ -11,10 +11,16 @@ export const useSolution = () => {
 	} = useEditorContext();
 
 	const [solution, setSolution] = useState<string | undefined>();
+	const [iterations, setIterations] = useState<number | undefined>();
+	const [steps, setSteps] = useState<number | undefined>();
 
 	const solve = useCallback(async () => {
 		setSolution('Solving...');
 		let resolutionStep = await getResolution({ entities });
+
+		if (resolutionStep) {
+			setIterations(resolutionStep.iteration);
+		}
 
 		const symbols: string[] = [];
 		while (resolutionStep) {
@@ -26,15 +32,20 @@ export const useSolution = () => {
 		}
 
 		if (symbols.length > 0) {
-			setSolution(`Steps ${symbols.length}: ${symbols.reverse().join('')}`);
+			setSteps(symbols.length);
+			setSolution(`💡 ${symbols.reverse().join('')}`);
 		} else {
-			setSolution('No solution');
+			setSteps(undefined);
+			setIterations(undefined);
+			setSolution('💩 No solution');
 		}
 	}, [entities]);
 
 	useEffect(() => {
 		setSolution(undefined);
+		setIterations(undefined);
+		setSteps(undefined);
 	}, [entities]);
 
-	return { solution, solve };
+	return { iterations, solution, solve, steps };
 };
