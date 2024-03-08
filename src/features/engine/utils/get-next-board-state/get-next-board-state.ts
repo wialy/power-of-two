@@ -79,6 +79,26 @@ export const getNextBoardState = ({
 
 	const { floors, movables, others } = getByType(entities);
 
+	for (const movable of movables) {
+		const floor = getByPosition({
+			entities: floors,
+			filter: isFloor,
+			position: movable.position,
+		});
+
+		if (!floor) {
+			movable.isRemoved = true;
+			movable.velocity = getClone(VECTOR_ZERO);
+
+			continue;
+		}
+
+		applyFloorDirection({
+			floor,
+			movable,
+		});
+	}
+
 	const toResolve = movables.filter(getIsMoving);
 
 	while (toResolve.length > 0) {
@@ -88,11 +108,6 @@ export const getNextBoardState = ({
 			entities: floors,
 			filter: isFloor,
 			position: current.position,
-		});
-
-		applyFloorDirection({
-			floor: currentFloor,
-			movable: current,
 		});
 
 		if (!currentFloor) {
@@ -140,16 +155,6 @@ export const getNextBoardState = ({
 					// stop both movables
 					current.velocity = getClone(VECTOR_ZERO);
 					nextMovable.velocity = getClone(VECTOR_ZERO);
-
-					// re-apply the floor direction to both movables
-					applyFloorDirection({
-						floor: nextFloor,
-						movable: nextMovable,
-					});
-					applyFloorDirection({
-						floor: currentFloor,
-						movable: current,
-					});
 				}
 
 				// remove nextMovable from the toResolve list
@@ -165,27 +170,11 @@ export const getNextBoardState = ({
 		if (getCanMerge(current, nextMovable)) {
 			mergeDices({ first: current, second: nextMovable });
 		} else {
-			if (getIsMoving(nextMovable)) {
-				applyFloorDirection({
-					floor: nextFloor,
-					movable: nextMovable,
-				});
-			} else {
-				const nextNextFloor = getByPosition({
-					entities: floors,
-					filter: isFloor,
-					position: getSumVector(nextMovable.position, current.velocity),
-				});
-
-				nextMovable.velocity = nextNextFloor
-					? getClone(current.velocity)
-					: getClone(VECTOR_ZERO);
+			if (!getIsMoving(nextMovable)) {
+				nextMovable.velocity = getClone(current.velocity);
 			}
 
-			current.velocity =
-				currentFloor.direction === undefined
-					? getClone(VECTOR_ZERO)
-					: getClone(currentFloor.direction);
+			current.velocity = getClone(VECTOR_ZERO);
 		}
 	}
 
