@@ -20,6 +20,7 @@ type ResolutionStep = {
 	velocity?: Vector;
 	previous?: ResolutionStep;
 	hash?: string;
+	iteration?: number;
 };
 
 const DIRECTIONS = [VECTOR_UP, VECTOR_DOWN, VECTOR_LEFT, VECTOR_RIGHT];
@@ -84,7 +85,7 @@ const addStatesToResolve = ({
 };
 
 function* iterate({ entities }: { entities: Entity[] }) {
-	const toResolve: ResolutionStep[] = [{ entities }];
+	const toResolve: ResolutionStep[] = [{ entities, iteration: 0 }];
 
 	let iteration = 0;
 
@@ -106,6 +107,8 @@ function* iterate({ entities }: { entities: Entity[] }) {
 		if (!step) {
 			return;
 		}
+
+		step.iteration = iteration;
 
 		const dices = step.entities.filter(isDice);
 
