@@ -165,11 +165,6 @@ export const getNextBoardState = ({
 		if (getCanMerge(current, nextMovable)) {
 			mergeDices({ first: current, second: nextMovable });
 		} else {
-			current.velocity =
-				currentFloor.direction === undefined
-					? getClone(VECTOR_ZERO)
-					: getClone(currentFloor.direction);
-
 			if (getIsMoving(nextMovable)) {
 				applyFloorDirection({
 					floor: nextFloor,
@@ -186,6 +181,11 @@ export const getNextBoardState = ({
 					? getClone(current.velocity)
 					: getClone(VECTOR_ZERO);
 			}
+
+			current.velocity =
+				currentFloor.direction === undefined
+					? getClone(VECTOR_ZERO)
+					: getClone(currentFloor.direction);
 		}
 	}
 
