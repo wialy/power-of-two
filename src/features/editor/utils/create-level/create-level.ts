@@ -1,7 +1,14 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import { VECTOR_ZERO } from '../../../engine/constants';
-import { Entity, Floor, isFloor, Vector } from '../../../engine/types/entities';
-import { getClone } from '../../../engine/utils/get-clone';
+import {
+	Entity,
+	Floor,
+	isFloor,
+	isMovable,
+	Vector,
+} from '../../../engine/types/entities';
+import { getByPosition } from '../../../engine/utils/get-by-position';
+import { getIsOppositeVector } from '../../../engine/utils/get-is-opposite-vector';
 import { getIsSameVector } from '../../../engine/utils/get-is-same-vector';
 import { getSumVector } from '../../../engine/utils/get-sum-vector';
 import { MAX_GRID_HEIGHT, MAX_GRID_WIDTH } from '../../constants';
@@ -20,14 +27,15 @@ export const createLevel = ({
 
 	const result: Entity[] = [];
 
-	const floors = availableEntities.filter(isFloor).sort(() => getRandom() - 0.5);
+	const floors = availableEntities.filter(isFloor);
 
 	const directors = floors.filter((entity) => entity.direction !== undefined);
-	const otherFloors = floors.filter((entity) => entity.direction === undefined);
-
-	for (const { direction, ...director } of directors) {
-		otherFloors.push(director);
-	}
+	const targets = floors.filter((entity) => entity.target !== undefined);
+	const otherFloors = floors
+		.filter(
+			(entity) => entity.direction === undefined && entity.target === undefined,
+		)
+		.sort(() => getRandom() - 0.5);
 
 	const currentPosition: Vector = {
 		x: Math.floor(MAX_GRID_WIDTH / 2),
@@ -91,54 +99,110 @@ export const createLevel = ({
 		return;
 	}
 
+	while (targets.length > 0) {
+		const target = targets.pop();
+
+		if (!target) {
+			continue;
+		}
+
+		const possibleTargetFloors = result
+			.filter(
+				(entity) =>
+					isFloor(entity) &&
+					entity.target === undefined &&
+					entity.direction === undefined,
+			)
+			.sort(() => getRandom() - 0.5);
+
+		if (possibleTargetFloors.length === 0) {
+			continue;
+		}
+
+		const targetFloor =
+			possibleTargetFloors[Math.floor(getRandom() * possibleTargetFloors.length)];
+
+		if (!targetFloor) {
+			continue;
+		}
+
+		(targetFloor as Floor).target = target.target;
+	}
+
 	while (directors.length > 0) {
 		const director = directors.pop();
 
-		if (!director?.direction) {
-			break;
+		if (!director) {
+			continue;
 		}
 
-		if (getIsSameVector(director.direction, VECTOR_ZERO)) {
-			const cleanFloors = result.filter(
+		const { direction } = director;
+
+		if (!direction) {
+			continue;
+		}
+
+		const cleanFloors = result
+			.filter(
 				(entity) =>
 					isFloor(entity) &&
 					entity.direction === undefined &&
 					entity.target === undefined,
-			) as Floor[];
+			)
+			.sort(() => getRandom() - 0.5) as Floor[];
 
-			cleanFloors[Math.floor(getRandom() * cleanFloors.length)].direction =
-				getClone(director.direction);
+		while (cleanFloors.length > 0) {
+			const floor = cleanFloors.pop();
 
-			continue;
-		}
+			if (!floor) {
+				continue;
+			}
 
-		const floorsWithNeighbor = result.filter(
-			(floor) =>
-				isFloor(floor) &&
-				floor.target === undefined &&
-				result.some(
+			if (getIsSameVector(direction, VECTOR_ZERO)) {
+				floor.direction = direction;
+
+				break;
+			}
+
+			const neighborsTowardsDirection = [];
+
+			let positionIterator = floor.position;
+			let nextFloor: Floor | undefined;
+
+			do {
+				positionIterator = getSumVector(positionIterator, direction);
+
+				nextFloor = getByPosition({
+					entities: result,
+					filter: isFloor,
+					position: positionIterator,
+				});
+
+				if (nextFloor) {
+					neighborsTowardsDirection.push(nextFloor);
+				}
+			} while (nextFloor);
+
+			// no neighbors towards direction
+			if (neighborsTowardsDirection.length === 0) {
+				continue;
+			}
+
+			// has opposite neighbor
+			if (
+				neighborsTowardsDirection.some(
 					(someFloor) =>
-						someFloor.id !== floor.id &&
-						director.direction &&
-						getIsSameVector(
-							someFloor.position,
-							getSumVector(floor.position, director.direction),
-						),
-				),
-		);
+						someFloor.direction &&
+						getIsOppositeVector(someFloor.direction, direction),
+				)
+			) {
+				continue;
+			}
 
-		if (floorsWithNeighbor.length === 0) {
-			continue;
+			floor.direction = direction;
+
+			break;
 		}
-
-		const floor =
-			floorsWithNeighbor[Math.floor(getRandom() * floorsWithNeighbor.length)];
-
-		if (!floor) {
-			continue;
-		}
-
-		(floor as Floor).direction = director.direction;
 	}
 
 	const floorPositions = result
@@ -151,11 +215,15 @@ export const createLevel = ({
 		.sort(() => getRandom() - 0.5);
 
 	const movables = availableEntities
-		.filter((entity) => entity.type === 'movable' || entity.type === 'dice')
+		.filter(isMovable)
 		.sort(() => getRandom() - 0.5);
 
 	for (const [movableIndex, movable] of movables.entries()) {
 		const position: Vector = floorPositions[movableIndex];
+
+		if (!position) {
+			break;
+		}
 
 		result.push({
 			...movable,
