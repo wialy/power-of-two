@@ -2,7 +2,7 @@ import { DIRECTIONS, VECTOR_ZERO } from '../engine/constants';
 import { createEntity } from '../engine/utils/create-entity';
 
 export const MAX_GRID_WIDTH = 5;
-export const MAX_GRID_HEIGHT = 7;
+export const MAX_GRID_HEIGHT = 9;
 
 export const ENTITIES = [
 	createEntity('floor'),
