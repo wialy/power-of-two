@@ -15,11 +15,11 @@ export const BoardView = ({ board }: { board: Board }) => {
 	}
 
 	const floors = entities.filter(isFloor);
-	const persisted = entities
+	const movables = entities
 		.filter(isMovable)
 		.sort((a, b) => (a.id > b.id ? 1 : -1));
 
-	const list = [...floors, ...persisted];
+	const list = [...floors, ...movables];
 
 	return (
 		<div
