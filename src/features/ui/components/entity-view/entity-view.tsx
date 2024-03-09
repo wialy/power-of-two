@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import { VECTOR_ZERO } from '../../../engine/constants';
 import {
 	Entity,
 	isDice,
@@ -7,7 +8,6 @@ import {
 	isMovable,
 	Movable,
 } from '../../../engine/types/entities';
-import { getClone } from '../../../engine/utils/get-clone';
 import { getIsSameVector } from '../../../engine/utils/get-is-same-vector';
 import { MOVE_DURATION, TILE_SIZE } from '../../constants';
 import { getArrowSymbol } from '../../utils/get-arrow-symbol';
@@ -24,6 +24,8 @@ const DICE_COLORS = [
 ];
 const FLOOR_COLOR = 'rgba(255,255,255,0.1)';
 const DIRECTION_COLOR = 'rgba(255,255,255,0.4)';
+const MOVABLE_COLOR = '#DADEDF';
+const DEFORMATION_FACTOR = 0.05;
 
 const getColor = (value: number) =>
 	DICE_COLORS[Math.min(value, DICE_COLORS.length - 1)];
@@ -37,14 +39,16 @@ const getBackgroundColor = (entity: Entity) => {
 		return FLOOR_COLOR;
 	}
 
-	return '#FFFFFF';
+	return MOVABLE_COLOR;
 };
 
 const getScales = (entity: Entity): [number, number] => {
 	if (entity.isRemoved) return [0, 0];
-	if (entity.isFresh) return [1.1, 1.1];
-	if (isMovable(entity) && entity.velocity.x !== 0) return [1.02, 0.98];
-	if (isMovable(entity) && entity.velocity.y !== 0) return [0.98, 1.02];
+	if (entity.isFresh) return [1.2, 1.2];
+	if (isMovable(entity) && entity.velocity.x !== 0)
+		return [1 + DEFORMATION_FACTOR, 1 - DEFORMATION_FACTOR];
+	if (isMovable(entity) && entity.velocity.y !== 0)
+		return [1 - DEFORMATION_FACTOR, 1 + DEFORMATION_FACTOR];
 
 	return [1, 1];
 };
@@ -56,15 +60,17 @@ const getBoxShadow = (entity: Entity) => {
 		} else if (entity.direction) {
 			return `inset 0 0 0 2px ${DIRECTION_COLOR}`;
 		}
-	} else if (isMovable(entity)) {
-		if (isDice(entity) && entity.isOnTarget) {
-			return `inset 0 ${-TILE_SIZE / 10}px 0 rgba(0,0,0,0.05), 0 0 ${TILE_SIZE / 2}px ${getColor(entity.value)}`;
-		}
 
-		return `inset 0 ${-TILE_SIZE / 10}px 0 rgba(0,0,0,0.05), 0.25vw 0.2vw 0 0 rgba(0,0,0,0.1)`;
+		return undefined;
 	}
 
-	return undefined;
+	if (isDice(entity)) {
+		return entity.isOnTarget
+			? `inset 0 0 1vw rgba(255,255,255,0.125), inset 0 0 0 transparent, 0 0 ${TILE_SIZE / 2}px ${getColor(entity.value)}`
+			: `inset 0 0 1vw ${getColor(entity.value)}, inset 0 ${-TILE_SIZE / 16}px 0 rgba(0,0,0,0.2), inset 0 0 0 transparent`;
+	}
+
+	return `inset 0 0 ${TILE_SIZE / 2}px ${MOVABLE_COLOR}, inset 0 ${-TILE_SIZE / 16}px 0 rgba(0,0,0,0.2)`;
 };
 
 const getSymbol = (entity: Entity) => {
@@ -72,6 +78,7 @@ const getSymbol = (entity: Entity) => {
 	if (isFloor(entity) && entity.direction)
 		return getArrowSymbol(entity.direction);
 	if (isFloor(entity) && entity.target !== undefined) return 2 ** entity.target;
+	if (isMovable(entity)) return '○';
 
 	return null;
 };
@@ -80,6 +87,7 @@ const getSymbolColor = (entity: Entity) => {
 	if (isFloor(entity) && entity.target !== undefined)
 		return getColor(entity.target);
 	if (isDice(entity)) return 'white';
+	if (isMovable(entity)) return '#FAFAFA';
 
 	return DIRECTION_COLOR;
 };
@@ -103,25 +111,12 @@ export const EntityView = ({
 		return () => clearTimeout(timeout);
 	}, []);
 
-	const { isRemoved } = entity;
+	const velocity = isMovable(entity) ? entity.velocity : VECTOR_ZERO;
 
-	const previousPosition = useRef(entity.position);
-
-	useEffect(() => {
-		if (!getIsSameVector(entity.position, previousPosition.current)) {
-			previousPosition.current = getClone(entity.position);
-		}
-	}, [entity]);
-
-	const velocity = useMemo(
-		() => ({
-			x: entity.position.x - previousPosition.current.x,
-			y: entity.position.y - previousPosition.current.y,
-		}),
-		[entity],
-	);
-
-	const [scaleX, scaleY] = getScales({ ...entity, velocity } as Movable);
+	const [scaleX, scaleY] = getScales({
+		...entity,
+		velocity,
+	} as Movable);
 
 	const size = isMovable(entity) ? TILE_SIZE - 12 : TILE_SIZE - 2;
 
@@ -145,7 +140,7 @@ export const EntityView = ({
 			className={$$.entity}
 			style={{
 				transform,
-				transitionDuration: `${Number(MOVE_DURATION)}ms`,
+				transitionDuration: `${Number(MOVE_DURATION * 1.05)}ms`,
 				willChange: isMovable(entity) ? 'transform' : undefined,
 			}}
 		>
@@ -157,25 +152,26 @@ export const EntityView = ({
 					boxShadow,
 					fontSize: TILE_SIZE / 2.5,
 					height: size,
-					transform: `translate(${-size / 2}px, ${
-						-size / 2
-					}px) scaleX(${scaleX}) scaleY(${scaleY}) translate(${velocity.x * 10}%, ${velocity.y * 10}%)`,
-					transitionDuration: `${MOVE_DURATION * 2}ms`,
+					perspective: '30px',
+					perspectiveOrigin: '50% 50%',
+					transform: `translate(${-size / 2}px, ${-size / 2}px) scale(${scaleX}, ${scaleY})`,
+					transitionDuration: `${Number(MOVE_DURATION * 3)}ms`,
 					width: size,
 				}}
 			>
 				{Boolean(symbol) && (
 					<span
-						className="symbol"
+						className={$$.symbol}
 						style={{
 							color: symbolColor,
-							textShadow: `0 ${-TILE_SIZE / 30}px rgba(0,0,0,0.05)`,
+							textShadow: `0 -1px 0 rgba(0,0,0,0.1)`,
 							transform:
-								isMovable(entity) && (velocity.x !== 0 || velocity.y !== 0)
-									? `translate(${(velocity.x * TILE_SIZE) / 8}px, ${
-											(velocity.y * TILE_SIZE) / 8
-										}px)`
-									: `translate(0, 0) scale(${isAdded && !isRemoved ? 1 : 0})`,
+								isMovable(entity) &&
+								(getIsSameVector(velocity, VECTOR_ZERO) || entity.isRemoved)
+									? `translate(0, 0) scale(${isAdded ? 1 : 0})`
+									: `translate(${velocity.x * TILE_SIZE * 0.1}px, ${
+											velocity.y * TILE_SIZE * 0.1
+										}px)`,
 							transitionDuration: `${MOVE_DURATION * 2}ms`,
 						}}
 					>
