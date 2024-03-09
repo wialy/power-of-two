@@ -10,6 +10,7 @@ import {
 	Floor,
 	isDice,
 	isFloor,
+	isMovable,
 	Vector,
 } from '../../types/entities';
 import { getIsSameVector } from '../get-is-same-vector';
@@ -25,7 +26,7 @@ type ResolutionStep = {
 
 const DIRECTIONS = [VECTOR_UP, VECTOR_DOWN, VECTOR_LEFT, VECTOR_RIGHT];
 
-const MAX_ITERATIONS = 5000;
+const MAX_ITERATIONS = 10_000;
 const MAX_STEP_EXECUTION_TIME = 40;
 
 const getIsResolved = ({
@@ -69,7 +70,11 @@ const addStatesToResolve = ({
 	}
 
 	// If the next board state is the same as the previous state, continue to the next direction
-	const hash = JSON.stringify(nextBoard.entities);
+	const hash = JSON.stringify(
+		nextBoard.entities.filter(isMovable).map(({ id, ...entity }) => ({
+			...entity,
+		})),
+	);
 
 	if (toResolve.some((resolvedStep) => resolvedStep.hash === hash)) {
 		return;
