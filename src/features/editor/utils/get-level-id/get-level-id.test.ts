@@ -1,7 +1,9 @@
 import { expect, test } from 'vitest';
 
-import { ALL_SYMBOLS } from '.';
+import { ID_SYMBOLS } from '../../constants';
 
 test('ALL_SYMBOLS are unique', () => {
-	expect(new Set(ALL_SYMBOLS)).toHaveLength(ALL_SYMBOLS.length);
+	const ALL_SYMBOLS = Object.values(ID_SYMBOLS).join('');
+
+	expect(new Set(ALL_SYMBOLS).size).toBe(ALL_SYMBOLS.length);
 });

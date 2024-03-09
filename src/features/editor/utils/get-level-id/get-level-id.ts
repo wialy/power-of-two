@@ -6,46 +6,28 @@ import {
 } from '../../../engine/types/entities';
 import { getBounds } from '../../../engine/utils/get-bounds';
 import { getIsSameVector } from '../../../engine/utils/get-is-same-vector';
-import {
-	ARROW_SET_LETTERS,
-	getArrowSymbol,
-} from '../../../ui/utils/get-arrow-symbol';
-
-const TARGET_SYMBOLS = 'qwertyui';
-const FLOOR_SYMBOL = 'o';
-const EMPTY_SYMBOL = 'x';
-const MOVABLE_SYMBOL = 'm';
-const DELIMITER = '-';
-const DICE_SYMBOLS = '0123456789';
-
-export const ALL_SYMBOLS =
-	TARGET_SYMBOLS +
-	FLOOR_SYMBOL +
-	EMPTY_SYMBOL +
-	MOVABLE_SYMBOL +
-	ARROW_SET_LETTERS +
-	DELIMITER +
-	DICE_SYMBOLS;
+import { getArrowSymbol } from '../../../ui/utils/get-arrow-symbol';
+import { ID_SYMBOLS } from '../../constants';
 
 const getEntitySymbol = (entity: Entity) => {
 	if (isFloor(entity) && entity.direction !== undefined) {
-		return getArrowSymbol(entity.direction, ARROW_SET_LETTERS);
+		return getArrowSymbol(entity.direction, ID_SYMBOLS.directors);
 	}
 
 	if (isFloor(entity) && entity.target !== undefined) {
-		return TARGET_SYMBOLS[entity.target];
+		return ID_SYMBOLS.target[entity.target];
 	}
 
 	if (isFloor(entity)) {
-		return FLOOR_SYMBOL;
+		return ID_SYMBOLS.floor;
 	}
 
 	if (isDice(entity)) {
-		return DICE_SYMBOLS[entity.value];
+		return ID_SYMBOLS.dice[entity.value];
 	}
 
 	if (isMovable(entity)) {
-		return MOVABLE_SYMBOL;
+		return ID_SYMBOLS.movable;
 	}
 };
 
@@ -61,7 +43,7 @@ export const getLevelId = ({ entities }: { entities: Entity[] }) => {
 			);
 
 			if (entitiesAtPosition.length === 0) {
-				row += EMPTY_SYMBOL;
+				row += ID_SYMBOLS.empty;
 
 				continue;
 			}
@@ -79,5 +61,5 @@ export const getLevelId = ({ entities }: { entities: Entity[] }) => {
 		result.push(row);
 	}
 
-	return result.join('-');
+	return result.join(ID_SYMBOLS.delimiter);
 };
