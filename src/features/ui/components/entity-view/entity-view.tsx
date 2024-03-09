@@ -44,7 +44,8 @@ const getBackgroundColor = (entity: Entity) => {
 
 const getScales = (entity: Entity): [number, number] => {
 	if (entity.isRemoved) return [0, 0];
-	if (entity.isFresh) return [1.2, 1.2];
+	if (entity.isFresh) return [1.1, 1.1];
+
 	if (isMovable(entity) && entity.velocity.x !== 0)
 		return [1 + DEFORMATION_FACTOR, 1 - DEFORMATION_FACTOR];
 	if (isMovable(entity) && entity.velocity.y !== 0)
