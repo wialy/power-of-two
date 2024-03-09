@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { Entity } from '../../engine/types/entities';
+import { VECTOR_ZERO } from '../../engine/constants';
+import { Entity, isMovable } from '../../engine/types/entities';
 import { Level } from '../../engine/types/game';
-import { getNextBoardState } from '../../engine/utils/get-next-board-state';
-import { getShouldUpdate } from '../../engine/utils/get-should-update';
-import { MOVE_DURATION } from '../../ui/constants';
+import { useGameAnimation } from './use-game-animation';
 
 export const useGame = ({
 	disabled,
@@ -14,42 +13,63 @@ export const useGame = ({
 	level: Level;
 }) => {
 	const [entities, setEntities] = useState<Entity[]>([...boardEntities]);
-	const [hash, setHash] = useState('');
 	const [isLocked, setIsLocked] = useState(false);
 
-	const intervalReference = useRef<ReturnType<typeof setInterval>>();
+	const isMounted = useRef(false);
+
+	const { animate, isAnimating } = useGameAnimation({
+		disabled: disabled || !isMounted.current,
+		entities,
+		setEntities,
+	});
 
 	useEffect(() => {
-		if (disabled) return;
+		isMounted.current = true;
 
-		intervalReference.current = setInterval(
-			() =>
-				setEntities((previousEntities) => {
-					const nextEntities = getNextBoardState({
-						board: { entities: previousEntities },
-					}).board.entities;
-
-					if (getShouldUpdate({ entities: nextEntities, previousEntities })) {
-						setIsLocked(true);
-
-						return nextEntities;
-					}
-
-					setIsLocked(false);
-
-					return previousEntities.map((entity) => ({
-						...entity,
-						isFresh: false,
-					}));
-				}),
-			MOVE_DURATION,
-		);
-
-		return () => clearInterval(intervalReference.current);
-	}, [disabled, hash]);
+		return () => {
+			isMounted.current = false;
+		};
+	}, []);
 
 	useEffect(() => {
-		setHash(JSON.stringify([...boardEntities]));
+		// react to forced movable entities
+		const hasForcedEntity = entities
+			.filter(isMovable)
+			.some((entity) => entity.isForced);
+
+		if (hasForcedEntity) {
+			setIsLocked(true);
+		}
+	}, [entities, isLocked]);
+
+	useEffect(() => {
+		if (disabled) {
+			return;
+		}
+
+		if (isLocked && !isAnimating) {
+			void (async () => {
+				await animate();
+
+				setEntities((current) =>
+					current.map((entity) =>
+						isMovable(entity)
+							? {
+									...entity,
+									isForced: false,
+									isFresh: false,
+									velocity: VECTOR_ZERO,
+								}
+							: entity,
+					),
+				);
+
+				setIsLocked(false);
+			})();
+		}
+	}, [animate, disabled, isAnimating, isLocked]);
+
+	useEffect(() => {
 		setEntities([...boardEntities]);
 	}, [boardEntities]);
 

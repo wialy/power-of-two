@@ -1,4 +1,4 @@
-import { Entity, isMovable } from '../../types/entities';
+import { Entity, isDice, isMovable } from '../../types/entities';
 import { getIsSameVector } from '../get-is-same-vector';
 
 export const getShouldUpdate = ({
@@ -20,9 +20,29 @@ export const getShouldUpdate = ({
 
 		if (!previousEntity) return true;
 
+		const hasPositionChanged = !getIsSameVector(
+			entity.position,
+			previousEntity.position,
+		);
+
+		const hasVelocityChanged = !getIsSameVector(
+			entity.velocity,
+			previousEntity.velocity,
+		);
+
+		let hasValueChanged = false;
+		let hasIsFreshChanged = false;
+
+		if (isDice(entity) && isDice(previousEntity)) {
+			hasValueChanged = entity.value !== previousEntity.value;
+			hasIsFreshChanged = entity.isFresh !== previousEntity.isFresh;
+		}
+
 		return (
-			!getIsSameVector(entity.position, previousEntity.position) ||
-			!getIsSameVector(entity.velocity, previousEntity.velocity)
+			hasPositionChanged ||
+			hasVelocityChanged ||
+			hasValueChanged ||
+			hasIsFreshChanged
 		);
 	});
 };
