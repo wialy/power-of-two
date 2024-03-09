@@ -18,7 +18,7 @@ test('one moving at stop', () => {
 			expect.objectContaining({
 				position: { x: 1, y: 0 },
 				type: 'movable',
-				velocity: { x: 1, y: 0 },
+				velocity: VECTOR_ZERO,
 			}),
 		]),
 	);

@@ -181,14 +181,19 @@ export const getNextBoardState = ({
 	for (const movable of movables) {
 		movable.isForced = false;
 
-		if (isDice(movable)) {
-			const currentFloor = getByPosition({
-				entities: floors,
-				filter: isFloor,
-				position: movable.position,
-			});
+		const floor = getByPosition({
+			entities: floors,
+			filter: isFloor,
+			position: movable.position,
+		});
 
-			movable.isOnTarget = currentFloor?.target === movable.value;
+		applyFloorDirection({
+			floor,
+			movable,
+		});
+
+		if (isDice(movable)) {
+			movable.isOnTarget = floor?.target === movable.value;
 		}
 	}
 
