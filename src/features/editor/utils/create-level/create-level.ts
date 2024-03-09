@@ -1,5 +1,11 @@
 /* eslint-disable sonarjs/cognitive-complexity */
-import { VECTOR_ZERO } from '../../../engine/constants';
+import {
+	VECTOR_DOWN,
+	VECTOR_LEFT,
+	VECTOR_RIGHT,
+	VECTOR_UP,
+	VECTOR_ZERO,
+} from '../../../engine/constants';
 import {
 	Entity,
 	Floor,
@@ -158,7 +164,51 @@ export const createLevel = ({
 				continue;
 			}
 
+			// stop director
 			if (getIsSameVector(direction, VECTOR_ZERO)) {
+				const neighbors = {
+					down: getByPosition({
+						entities: result,
+						filter: isFloor,
+						position: getSumVector(floor.position, VECTOR_DOWN),
+					}),
+					left: getByPosition({
+						entities: result,
+						filter: isFloor,
+						position: getSumVector(floor.position, VECTOR_LEFT),
+					}),
+					right: getByPosition({
+						entities: result,
+						filter: isFloor,
+						position: getSumVector(floor.position, VECTOR_RIGHT),
+					}),
+					up: getByPosition({
+						entities: result,
+						filter: isFloor,
+						position: getSumVector(floor.position, VECTOR_UP),
+					}),
+				};
+
+				const totalNeighbors = Object.values(neighbors).filter(Boolean).length;
+
+				// at least 2 neighbors
+				if (totalNeighbors < 2) {
+					continue;
+				}
+
+				// no stop in corners
+				if (
+					totalNeighbors === 2 &&
+					((neighbors.left && !neighbors.right) ||
+						(!neighbors.left && neighbors.right) ||
+						(neighbors.up && !neighbors.down) ||
+						(!neighbors.up && neighbors.down))
+				) {
+					continue;
+				}
+
+				// 3 or more
+
 				floor.direction = direction;
 
 				break;
@@ -231,5 +281,8 @@ export const createLevel = ({
 		});
 	}
 
-	return result;
+	return result.map((entity, index) => ({
+		...entity,
+		id: `${entity.type}-${index}`,
+	})) as Entity[];
 };
