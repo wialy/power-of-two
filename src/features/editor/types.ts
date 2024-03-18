@@ -6,3 +6,9 @@ export type LevelRecord = {
 };
 
 export type SerializedLevelRecord = `${string}:${string}:${string}:${string}`;
+
+export type EpisodeRecord = {
+	levels: number;
+	name: string;
+	symbols: string;
+};
