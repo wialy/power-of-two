@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
 
-import { Entity } from '../../engine/types/entities';
-import { getNextBoardState } from '../../engine/utils/get-next-board-state';
-import { getShouldUpdate } from '../../engine/utils/get-should-update';
-import { MOVE_DURATION } from '../../ui/constants';
+import { Entity } from '../../../engine/types/entities';
+import { getNextBoardState } from '../../../engine/utils/get-next-board-state';
+import { getShouldUpdate } from '../../../engine/utils/get-should-update';
+import { MOVE_DURATION } from '../../../ui/constants';
 
 export const useGameAnimation = ({
 	disabled,

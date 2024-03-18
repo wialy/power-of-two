@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { VECTOR_ZERO } from '../../engine/constants';
-import { Entity, isMovable } from '../../engine/types/entities';
-import { Level } from '../../engine/types/game';
+import { VECTOR_ZERO } from '../../../engine/constants';
+import { Entity, isMovable } from '../../../engine/types/entities';
+import { Level } from '../../../engine/types/game';
 import { useGameAnimation } from './use-game-animation';
 
 export const useGame = ({

@@ -1,10 +1,11 @@
 import './global.css';
 
+import { useEpisodes } from './features/editor/hooks/use-episodes';
 import { VECTOR_LEFT } from './features/engine/constants';
 import { Entity } from './features/engine/types/entities';
 import { createEntity } from './features/engine/utils/create-entity';
-import { useControls } from './features/hooks/use-controls';
-import { useGame } from './features/hooks/use-game';
+import { useControls } from './features/game/hooks/use-controls';
+import { useGame } from './features/game/hooks/use-game';
 import { BoardView } from './features/ui/components/board-view';
 import { SwipeArea } from './features/ui/components/swipe-area';
 
@@ -27,8 +28,11 @@ const Game = () => {
 
 	const { swipeProps } = useControls({ setEntities });
 
+	const { episodes } = useEpisodes();
+
 	return (
 		<>
+			<pre>{JSON.stringify(episodes, null, 2)}</pre>
 			<BoardView board={{ entities }} />
 			<SwipeArea {...swipeProps} />
 		</>

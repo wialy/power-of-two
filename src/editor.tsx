@@ -3,8 +3,8 @@ import './global.css';
 import { EntitiesSidebar } from './features/editor/components/entities-sidebar/entities-sidebar';
 import { LevelInfoSidebar } from './features/editor/components/level-info-sidebar';
 import { useEditorContext } from './features/editor/contexts/editor-context';
-import { useControls } from './features/hooks/use-controls';
-import { useGame } from './features/hooks/use-game';
+import { useControls } from './features/game/hooks/use-controls';
+import { useGame } from './features/game/hooks/use-game';
 import { BoardView } from './features/ui/components/board-view';
 import { SwipeArea } from './features/ui/components/swipe-area';
 

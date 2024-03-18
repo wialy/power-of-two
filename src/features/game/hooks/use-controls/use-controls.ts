@@ -6,8 +6,8 @@ import {
 	VECTOR_LEFT,
 	VECTOR_RIGHT,
 	VECTOR_UP,
-} from '../../engine/constants';
-import { Entity, isMovable, Vector } from '../../engine/types/entities';
+} from '../../../engine/constants';
+import { Entity, isMovable, Vector } from '../../../engine/types/entities';
 
 const KEY_TO_VELOCITY_VECTOR: Record<string, Vector> = {
 	ArrowDown: VECTOR_DOWN,
