@@ -37,11 +37,15 @@ export const createLevel = ({
 
 	const directors = floors.filter((entity) => entity.direction !== undefined);
 	const targets = floors.filter((entity) => entity.target !== undefined);
-	const otherFloors = floors
-		.filter(
-			(entity) => entity.direction === undefined && entity.target === undefined,
-		)
-		.sort(() => getRandom() - 0.5);
+	const initialCleanFloors = floors.filter(
+		(entity) => entity.direction === undefined && entity.target === undefined,
+	);
+
+	const otherFloors = [
+		...initialCleanFloors,
+		...directors.map(({ direction, ...rest }) => rest),
+		...targets.map(({ target, ...rest }) => rest),
+	].sort(() => getRandom() - 0.5);
 
 	const currentPosition: Vector = {
 		x: Math.floor(MAX_GRID_WIDTH / 2),
