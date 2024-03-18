@@ -10,6 +10,7 @@
 		"format": "prettier . --write",
 		"preview": "vite preview",
 		"test": "vitest --disable-console-intercept=true",
+		"generate:levels": "vite-node ./src/features/editor/scripts/create-levels/",
 		"prepare": "husky"
 	},
 	"release": {
@@ -30,6 +31,8 @@
 		]
 	},
 	"dependencies": {
+		"@codenamize/codenamize": "^1.1.1",
+		"command-line-args": "^5.2.1",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-hotkeys-hook": "^4.5.0",
@@ -42,6 +45,7 @@
 		"@commitlint/config-conventional": "^18.6.2",
 		"@digitalex/eslint-config": "^1.0.3",
 		"@semantic-release/git": "^10.0.1",
+		"@types/command-line-args": "^5.2.3",
 		"@types/react": "^18.2.56",
 		"@types/react-dom": "^18.2.19",
 		"@types/uuid": "^9.0.8",
@@ -51,7 +55,7 @@
 		"husky": "^9.0.11",
 		"lint-staged": "^15.2.2",
 		"prettier": "3.2.5",
-		"typescript": "^5.2.2",
+		"typescript": "^5.4.2",
 		"vite": "^5.1.4",
 		"vitest": "^1.3.1"
 	}
