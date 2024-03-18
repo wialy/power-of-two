@@ -4,3 +4,5 @@ export type LevelRecord = {
 	name: string;
 	iterations: number;
 };
+
+export type SerializedLevelRecord = `${string}:${string}:${string}:${string}`;

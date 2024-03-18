@@ -6,12 +6,17 @@ import fs from 'node:fs';
 import cli from 'command-line-args';
 
 import { Entity } from '../../../engine/types/entities';
-import { LevelRecord } from '../../types';
+import { LevelRecord, SerializedLevelRecord } from '../../types';
+import { getParsedLevelRecord } from '../../utils/get-parsed-level-record';
+import { getSerializedLevelRecord } from '../../utils/get-serialized-level-record';
 import { getSymbolEntity } from '../../utils/get-symbol-entity';
 import { createLevels } from './create-levels';
 
 const getSortedLevels = (levels: LevelRecord[]) =>
 	levels.sort((a, b) => a.steps - b.steps || a.iterations - b.iterations);
+
+const serialize = (levels: LevelRecord[]) =>
+	`[\n\t${levels.map(getSerializedLevelRecord).join(',\n\t')}\n]`;
 
 // read from script arguments
 const options = cli([
@@ -68,10 +73,11 @@ const path = `${folder}/${fileName}`;
 if (fs.existsSync(path)) {
 	// append to file
 	const file = fs.readFileSync(path, 'utf8');
-	const data = JSON.parse(file) as LevelRecord[];
+	const data = JSON.parse(file) as SerializedLevelRecord[];
+	const levelsData = data.map(getParsedLevelRecord);
 
 	const uniqueLevels: LevelRecord[] = [];
-	for (const level of [...data, ...levels]) {
+	for (const level of [...levelsData, ...levels]) {
 		if (!uniqueLevels.some(({ id }) => id === level.id)) {
 			uniqueLevels.push(level);
 		}
@@ -80,12 +86,12 @@ if (fs.existsSync(path)) {
 	const newLevels = getSortedLevels(uniqueLevels);
 
 	console.log(`Appending to ${fileName}, ${newLevels.length} levels total`);
-	fs.writeFileSync(path, JSON.stringify(newLevels, null, 2));
+	fs.writeFileSync(path, serialize(newLevels));
 	process.exit(0);
 }
 
 const file = fs.createWriteStream(path);
 
 console.log(`Creating new file ${fileName}, ${levels.length} levels total`);
-file.write(JSON.stringify(getSortedLevels(levels), null, 2));
+file.write(serialize(getSortedLevels(levels)));
 file.end();
