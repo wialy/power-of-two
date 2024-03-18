@@ -16,7 +16,7 @@ import {
 import { getIsSameVector } from '../get-is-same-vector';
 import { getNextBoardFinalState } from '../get-next-board-final-state';
 
-type ResolutionStep = {
+export type ResolutionStep = {
 	entities: Entity[];
 	velocity?: Vector;
 	previous?: ResolutionStep;
