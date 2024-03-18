@@ -11,6 +11,7 @@
 		"preview": "vite preview",
 		"test": "vitest --disable-console-intercept=true",
 		"generate:levels": "vite-node ./src/features/editor/scripts/create-levels/",
+		"generate:episodes": "vite-node ./src/features/editor/scripts/update-episodes/",
 		"prepare": "husky"
 	},
 	"release": {
