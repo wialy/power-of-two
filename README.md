@@ -29,6 +29,6 @@ In creating Power of Two, I wanted to show fellow web developers that game devel
 
 Power of Two is developed by [Alex Ilchenko](https://twitter.com/alexwooods)
 
-License:
+## License:
 
-## This project is licensed under the [ISC Licence](LICENSE.md).
+This project is licensed under the [CC BY-NC 4.0 DEED License](LICENSE.md).
