@@ -12,6 +12,7 @@ export const Navigation = () => (
 				<Levels />
 				<Game />
 				<OutOfMoves />
+				<Win />
 			</ScreenContainer>
 		</div>
 	</div>
@@ -61,6 +62,14 @@ const OutOfMoves = () => (
 	<Screen id="lost">
 		<div className={$$.bar}>
 			<div className={$$.title}>Game Over</div>
+		</div>
+	</Screen>
+);
+
+const Win = () => (
+	<Screen id="won">
+		<div className={$$.bar}>
+			<div className={$$.title}>Victory!</div>
 		</div>
 	</Screen>
 );

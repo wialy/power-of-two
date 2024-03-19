@@ -26,10 +26,11 @@ export const useGameState = create<GameState>((set, get) => ({
 		}));
 		setTimeout(() => {
 			get().setLevel(level);
+			get().setScreen('game');
 		}, 0);
 	},
 	screen: 'episodes',
-	screens: ['episodes', 'levels', 'game', 'lost'],
+	screens: ['episodes', 'levels', 'game', 'lost', 'won'],
 	setEpisode: (episode) => set({ episode }),
 	setLevel(level) {
 		set({ level, moves: 0 });
