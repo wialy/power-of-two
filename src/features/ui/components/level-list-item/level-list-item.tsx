@@ -14,12 +14,15 @@ export const LevelListItem = ({
 }: {
 	level: LevelRecord;
 }) => {
-	const { setLevel } = useGameState();
+	const { setLevel, setScreen } = useGameState();
 
 	return (
 		<button
 			className={$$.container}
-			onClick={() => setLevel(id)}
+			onClick={() => {
+				setLevel(id);
+				setScreen('game');
+			}}
 		>
 			<Preview id={id} />
 			<div className={$$.info}>
