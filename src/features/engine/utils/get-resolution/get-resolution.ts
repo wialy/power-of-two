@@ -10,9 +10,9 @@ import {
 	Floor,
 	isDice,
 	isFloor,
-	isMovable,
 	Vector,
 } from '../../types/entities';
+import { getHash } from '../get-hash';
 import { getIsSameVector } from '../get-is-same-vector';
 import { getNextBoardFinalState } from '../get-next-board-final-state';
 
@@ -70,11 +70,7 @@ const addStatesToResolve = ({
 	}
 
 	// If the next board state is the same as the previous state, continue to the next direction
-	const hash = JSON.stringify(
-		nextBoard.entities.filter(isMovable).map(({ id, ...entity }) => ({
-			...entity,
-		})),
-	);
+	const hash = getHash(nextBoard);
 
 	if (toResolve.some((resolvedStep) => resolvedStep.hash === hash)) {
 		return;
