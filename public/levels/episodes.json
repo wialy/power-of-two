@@ -43,5 +43,15 @@
     "levels": 36,
     "name": "Fancy Tank",
     "symbols": "00DRmmmooooooqq"
+  },
+  {
+    "levels": 17,
+    "name": "Evasive Shake",
+    "symbols": "000LRooooqw"
+  },
+  {
+    "levels": 39,
+    "name": "Overt Dog",
+    "symbols": "000LRmoooooooqw"
   }
 ]
