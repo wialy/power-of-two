@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-access-key */
 import { useHotkeys } from 'react-hotkeys-hook';
 
 import { Button } from '../../../ui/components/button';

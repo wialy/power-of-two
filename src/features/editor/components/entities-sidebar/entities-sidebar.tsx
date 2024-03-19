@@ -28,7 +28,6 @@ const getIsSameEntity = (a: Entity, b: Entity) => {
 export const EntitiesSidebar = () => {
 	const { entities, setEntities } = useEditorContext();
 
-	// eslint-disable-next-line unicorn/consistent-function-scoping
 	const handleValueChange = (entity: Entity) => (value: number) => {
 		setEntities(
 			entities.map((record) =>
