@@ -1,4 +1,10 @@
-import { DIRECTIONS, VECTOR_ZERO } from '../../../engine/constants';
+import {
+	VECTOR_DOWN,
+	VECTOR_LEFT,
+	VECTOR_RIGHT,
+	VECTOR_UP,
+	VECTOR_ZERO,
+} from '../../../engine/constants';
 import { createEntity } from '../../../engine/utils/create-entity';
 import { ID_SYMBOLS } from '../../constants';
 
@@ -25,7 +31,7 @@ export const getSymbolEntity = (symbol: string) => {
 
 	if (ID_SYMBOLS.directors.includes(symbol)) {
 		return createEntity('floor', {
-			direction: [VECTOR_ZERO, ...DIRECTIONS][
+			direction: [VECTOR_ZERO, VECTOR_DOWN, VECTOR_UP, VECTOR_RIGHT, VECTOR_LEFT][
 				ID_SYMBOLS.directors.indexOf(symbol)
 			],
 		});

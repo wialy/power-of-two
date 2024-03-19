@@ -1,7 +1,7 @@
 export const ARROW_SET_SIMPLE = '⏹↓↑→←';
-export const ARROW_SET_TRIANGLE = '⏹▲▼►◄';
+export const ARROW_SET_TRIANGLE = '⏹▼▲►◄';
 
-export const ARROW_SET_LETTERS = 'SUDRL';
+export const ARROW_SET_LETTERS = 'SDURL';
 
 export const getArrowSymbol = (
 	velocity: { x: number; y: number },
