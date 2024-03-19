@@ -5,9 +5,8 @@
 }
 
 .levels {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
 	gap: 1rem;
 	padding: 1rem;
 }
