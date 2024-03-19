@@ -13,6 +13,7 @@ import {
 	isMovable,
 	Vector,
 } from '../../../engine/types/entities';
+import { createEntity } from '../../../engine/utils/create-entity';
 import { getByPosition } from '../../../engine/utils/get-by-position';
 import { getIsOppositeVector } from '../../../engine/utils/get-is-opposite-vector';
 import { getIsSameVector } from '../../../engine/utils/get-is-same-vector';
@@ -41,10 +42,13 @@ export const createLevel = ({
 		(entity) => entity.direction === undefined && entity.target === undefined,
 	);
 
+	const initialMovables = availableEntities.filter(isMovable);
+
 	const otherFloors = [
 		...initialCleanFloors,
-		...directors.map(({ direction, ...rest }) => rest),
-		...targets.map(({ target, ...rest }) => rest),
+		...directors.map(({ position }) => createEntity('floor', { position })),
+		...targets.map(({ position }) => createEntity('floor', { position })),
+		...initialMovables.map(({ position }) => createEntity('floor', { position })),
 	].sort(() => getRandom() - 0.5);
 
 	const currentPosition: Vector = {
@@ -116,25 +120,20 @@ export const createLevel = ({
 			continue;
 		}
 
-		const possibleTargetFloors = result
-			.filter(
-				(entity) =>
-					isFloor(entity) &&
-					entity.target === undefined &&
-					entity.direction === undefined,
-			)
-			.sort(() => getRandom() - 0.5);
+		const possibleTargetFloors = result.filter(
+			(entity) =>
+				isFloor(entity) &&
+				entity.target === undefined &&
+				entity.direction === undefined,
+		);
 
 		if (possibleTargetFloors.length === 0) {
-			continue;
+			return;
 		}
 
-		const targetFloor =
-			possibleTargetFloors[Math.floor(getRandom() * possibleTargetFloors.length)];
-
-		if (!targetFloor) {
-			continue;
-		}
+		const targetFloor = possibleTargetFloors.at(
+			getRandom() * possibleTargetFloors.length,
+		);
 
 		(targetFloor as Floor).target = target.target;
 	}
@@ -268,11 +267,7 @@ export const createLevel = ({
 		.map((entity) => entity.position)
 		.sort(() => getRandom() - 0.5);
 
-	const movables = availableEntities
-		.filter(isMovable)
-		.sort(() => getRandom() - 0.5);
-
-	for (const [movableIndex, movable] of movables.entries()) {
+	for (const [movableIndex, movable] of initialMovables.entries()) {
 		const position: Vector = floorPositions[movableIndex];
 
 		if (!position) {
