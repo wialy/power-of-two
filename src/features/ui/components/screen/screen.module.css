@@ -4,6 +4,7 @@
 	transform: translateY(0);
 	transition: transform 0.3s ease-in-out;
 	overflow: hidden;
+	height: 100%;
 }
 
 .hidden {

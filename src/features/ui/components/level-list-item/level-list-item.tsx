@@ -4,6 +4,7 @@ import { MAX_GRID_HEIGHT, MAX_GRID_WIDTH } from '../../../editor/constants';
 import { LevelRecord } from '../../../editor/types';
 import { getIdEntities } from '../../../editor/utils/get-id-entities';
 import { getBounds } from '../../../engine/utils/get-bounds';
+import { MAX_MOVES_MULTIPLIER } from '../../../game/constants';
 import { useGameState } from '../../../game/hooks/use-game-state';
 import { TILE_SIZE } from '../../constants';
 import { EntityView } from '../entity-view';
@@ -14,15 +15,18 @@ export const LevelListItem = ({
 }: {
 	level: LevelRecord;
 }) => {
-	const { setLevel, setScreen } = useGameState();
+	const { setLevel, setMaxMoves, setScreen } = useGameState();
+
+	const handleClick = () => {
+		setLevel(id);
+		setMaxMoves(steps * MAX_MOVES_MULTIPLIER);
+		setScreen('game');
+	};
 
 	return (
 		<button
 			className={$$.container}
-			onClick={() => {
-				setLevel(id);
-				setScreen('game');
-			}}
+			onClick={handleClick}
 		>
 			<Preview id={id} />
 			<div className={$$.info}>
@@ -45,7 +49,7 @@ const Preview = memo(({ id }: { id: string }) => {
 		<div
 			style={{
 				alignItems: 'center',
-				backgroundColor: '#232323',
+				backgroundColor: 'var(--color-navy)',
 				boxSizing: 'border-box',
 				display: 'flex',
 				height: TILE_SIZE * MAX_GRID_HEIGHT * SCALE,

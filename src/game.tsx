@@ -1,24 +1,22 @@
 import './global.css';
 
-import { EpisodesView } from './features/ui/components/episodes-view';
-import { GameView } from './features/ui/components/game-view';
+import { EpisodesScreen } from './features/ui/components/episodes-screen';
+import { GameScreen } from './features/ui/components/game-screen';
 import { Layout } from './features/ui/components/layout';
-import { LevelsView } from './features/ui/components/levels-view';
-import { Screen } from './features/ui/components/screen';
+import { LevelsScreen } from './features/ui/components/levels-screen';
+import { Navigation } from './features/ui/components/navigation';
+import { OutOfMovesScreen } from './features/ui/components/out-of-moves-screen';
 import { ScreenContainer } from './features/ui/components/screen-container';
+import { WinScreen } from './features/ui/components/win-screen';
 
 const Game = () => (
-	<Layout>
+	<Layout navigation={<Navigation />}>
 		<ScreenContainer>
-			<Screen id="episodes">
-				<EpisodesView />
-			</Screen>
-			<Screen id="levels">
-				<LevelsView />
-			</Screen>
-			<Screen id="game">
-				<GameView />
-			</Screen>
+			<EpisodesScreen />
+			<LevelsScreen />
+			<GameScreen />
+			<OutOfMovesScreen />
+			<WinScreen />
 		</ScreenContainer>
 	</Layout>
 );

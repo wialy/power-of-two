@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { VECTOR_ZERO } from '../../../engine/constants';
-import { Entity, isMovable } from '../../../engine/types/entities';
+import { Entity, isDice, isMovable } from '../../../engine/types/entities';
 import { Level } from '../../../engine/types/game';
+import { getIsSameVector } from '../../../engine/utils/get-is-same-vector';
 import { useGameState } from '../use-game-state';
 import { useGameAnimation } from './use-game-animation';
 
@@ -22,7 +23,7 @@ export const useGame = ({
 	disabled?: boolean;
 	level: Level;
 }) => {
-	const { countMove } = useGameState();
+	const { countMove, setScreen } = useGameState();
 
 	const [entities, setEntities] = useState<Entity[]>([...boardEntities]);
 	const [isLocked, setIsLocked] = useState(false);
@@ -94,6 +95,23 @@ export const useGame = ({
 	useEffect(() => {
 		setEntities([...boardEntities]);
 	}, [boardEntities]);
+
+	useEffect(() => {
+		const dices = entities.filter(isDice);
+		const isAnyMoving = dices.some(
+			(dice) => !getIsSameVector(dice.velocity, VECTOR_ZERO),
+		);
+
+		if (isAnyMoving) {
+			return;
+		}
+
+		const allOnTarget = dices.every((dice) => dice.isOnTarget);
+
+		if (allOnTarget) {
+			setScreen('won');
+		}
+	}, [entities, setScreen]);
 
 	return { entities, isLocked, setEntities };
 };

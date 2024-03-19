@@ -8,15 +8,17 @@ import { BoardView } from '../board-view';
 import { SwipeArea } from '../swipe-area';
 
 export const GameView = () => {
-	const { level } = useGameState();
+	const { level, screen } = useGameState();
 
 	const levelEntities = useMemo(() => getIdEntities(level), [level]);
 
+	const disabled = screen !== 'game';
 	const { entities, setEntities } = useGame({
+		disabled,
 		level: { entities: levelEntities, id: '' },
 	});
 
-	const { swipeProps } = useControls({ setEntities });
+	const { swipeProps } = useControls({ disabled, setEntities });
 
 	return (
 		<>

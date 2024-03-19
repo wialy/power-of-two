@@ -1,0 +1,43 @@
+.navigation {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	background-color: black;
+	height: 100%;
+}
+
+.leftAction {
+	position: absolute;
+	left: 1.5rem;
+}
+
+.rightAction {
+	position: absolute;
+	right: 1.5rem;
+}
+
+.content {
+	flex: 1;
+	align-self: stretch;
+	position: relative;
+	display: flex;
+}
+
+.bar {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+}
+
+.title {
+	font-size: 1.5rem;
+	color: white;
+}
+
+.subtitle {
+	font-size: 1rem;
+	color: white;
+}
