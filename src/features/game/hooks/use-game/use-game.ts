@@ -3,7 +3,17 @@ import { useEffect, useRef, useState } from 'react';
 import { VECTOR_ZERO } from '../../../engine/constants';
 import { Entity, isMovable } from '../../../engine/types/entities';
 import { Level } from '../../../engine/types/game';
+import { useGameState } from '../use-game-state';
 import { useGameAnimation } from './use-game-animation';
+
+const getSortedMovables = (entities: Entity[]) =>
+	entities
+		.filter(isMovable)
+		.map(({ id, position }) => ({ id, position }))
+		.sort((a, b) => (a.id > b.id ? 1 : -1));
+
+const getSnapshot = (entities: Entity[]) =>
+	JSON.stringify(getSortedMovables(entities));
 
 export const useGame = ({
 	disabled,
@@ -12,6 +22,8 @@ export const useGame = ({
 	disabled?: boolean;
 	level: Level;
 }) => {
+	const { countMove } = useGameState();
+
 	const [entities, setEntities] = useState<Entity[]>([...boardEntities]);
 	const [isLocked, setIsLocked] = useState(false);
 
@@ -31,14 +43,17 @@ export const useGame = ({
 		};
 	}, []);
 
+	const snapshot = useRef('');
+
 	useEffect(() => {
 		// react to forced movable entities
 		const hasForcedEntity = entities
 			.filter(isMovable)
 			.some((entity) => entity.isForced);
 
-		if (hasForcedEntity) {
+		if (hasForcedEntity && !isLocked) {
 			setIsLocked(true);
+			snapshot.current = getSnapshot(entities);
 		}
 	}, [entities, isLocked]);
 
@@ -51,8 +66,10 @@ export const useGame = ({
 			void (async () => {
 				await animate();
 
-				setEntities((current) =>
-					current.map((entity) =>
+				setIsLocked(false);
+
+				setEntities((current) => {
+					const result = current.map((entity) =>
 						isMovable(entity)
 							? {
 									...entity,
@@ -61,13 +78,18 @@ export const useGame = ({
 									velocity: VECTOR_ZERO,
 								}
 							: entity,
-					),
-				);
+					);
 
-				setIsLocked(false);
+					if (snapshot.current !== getSnapshot(result) && snapshot.current !== '') {
+						snapshot.current = '';
+						countMove();
+					}
+
+					return result;
+				});
 			})();
 		}
-	}, [animate, disabled, isAnimating, isLocked]);
+	}, [animate, countMove, disabled, entities, isAnimating, isLocked]);
 
 	useEffect(() => {
 		setEntities([...boardEntities]);
