@@ -3,18 +3,18 @@
 	justify-content: center;
 	align-items: center;
 	position: relative;
-	background-color: black;
+	background-color: var(--color-black);
 	height: 100%;
 }
 
 .leftAction {
 	position: absolute;
-	left: 1.5rem;
+	left: 1rem;
 }
 
 .rightAction {
 	position: absolute;
-	right: 1.5rem;
+	right: 1rem;
 }
 
 .content {
@@ -33,11 +33,35 @@
 }
 
 .title {
-	font-size: 1.5rem;
-	color: white;
+	font-size: 1rem;
+	color: var(--color-silver);
+	font-weight: bold;
 }
 
 .subtitle {
-	font-size: 1rem;
-	color: white;
+	font-size: 0.75rem;
+	color: var(--color-gray);
+	text-transform: uppercase;
+}
+
+.buttonText {
+	display: none;
+}
+
+@media (min-width: 768px) {
+	.buttonText {
+		display: block;
+	}
+
+	.leftAction {
+		left: 2rem;
+	}
+
+	.rightAction {
+		right: 2rem;
+	}
+
+	.title {
+		font-size: 1.5rem;
+	}
 }

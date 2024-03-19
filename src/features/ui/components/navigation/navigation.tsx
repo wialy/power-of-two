@@ -1,3 +1,6 @@
+import { useHotkeys } from 'react-hotkeys-hook';
+
+import { useEpisodes } from '../../../editor/hooks/use-episodes';
 import { useGameState } from '../../../game/hooks/use-game-state';
 import { Button } from '../button';
 import { Screen } from '../screen';
@@ -27,20 +30,31 @@ const Episodes = () => (
 	</Screen>
 );
 
-const Levels = () => (
-	<Screen id="levels">
-		<div className={$$.bar}>
-			<div className={$$.leftAction}>
-				<BackButton label="Episodes" />
+const Levels = () => {
+	const { episodes } = useEpisodes();
+	const { episode } = useGameState();
+
+	const currentEpisode = episodes.find((record) => record.symbols === episode);
+
+	return (
+		<Screen id="levels">
+			<div className={$$.bar}>
+				<div className={$$.leftAction}>
+					<BackButton label="Episodes" />
+				</div>
+				<div className={$$.title}>{currentEpisode?.name ?? ''}</div>
+				<div className={$$.subtitle}>Please choose the level</div>
 			</div>
-			<div className={$$.title}>Levels</div>
-			<div className={$$.subtitle}>Please choose the level</div>
-		</div>
-	</Screen>
-);
+		</Screen>
+	);
+};
 
 const Game = () => {
-	const { maxMoves, moves, restart } = useGameState();
+	const { maxMoves, moves, restart, screen } = useGameState();
+
+	const isVisible = screen === 'game';
+
+	useHotkeys('r', restart, { enabled: isVisible });
 
 	return (
 		<Screen id="game">
@@ -51,7 +65,7 @@ const Game = () => {
 				<div className={$$.subtitle}>Moves</div>
 				<div className={$$.title}>{maxMoves - moves}</div>
 				<div className={$$.rightAction}>
-					<Button onClick={restart}>⟳&nbsp;Restart</Button>
+					<Button onClick={restart}>↻&nbsp;Restart</Button>
 				</div>
 			</div>
 		</Screen>
@@ -89,5 +103,9 @@ const BackButton = ({ label = 'Back' }: { label?: string }) => {
 		return null;
 	}
 
-	return <Button onClick={handleClick}>&larr;&nbsp;{label}</Button>;
+	return (
+		<Button onClick={handleClick}>
+			&larr;<span className={$$.buttonText}>&nbsp;{label}</span>
+		</Button>
+	);
 };

@@ -1,8 +1,8 @@
-#root {
-	height: 100vh;
+html,
+body {
+	height: 100%;
 	width: 100%;
 	overflow: hidden;
-	position: relative;
 }
 
 :root {
@@ -25,4 +25,13 @@
 	--color-silver: #dddddd;
 	--color-gray: #aaaaaa;
 	--color-black: #111111;
+}
+
+* {
+	-webkit-tap-highlight-color: transparent;
+	user-select: none;
+}
+
+body {
+	background-color: var(--color-black);
 }

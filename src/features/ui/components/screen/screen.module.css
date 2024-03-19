@@ -2,13 +2,16 @@
 	position: absolute;
 	inset: 0;
 	transform: translateY(0);
-	transition: transform 0.3s ease-in-out;
+	transition:
+		transform 0.3s ease-in-out,
+		opacity 0.3s ease-in-out;
 	overflow: hidden;
 	height: 100%;
 }
 
 .hidden {
 	pointer-events: none;
+	opacity: 0;
 }
 
 .hidden.up {
