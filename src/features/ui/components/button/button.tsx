@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { ButtonHTMLAttributes } from 'react';
 
 import $$ from './button.module.css';
@@ -11,9 +12,14 @@ export const Button = ({
 	...properties
 }: { size?: Size } & ButtonHTMLAttributes<HTMLButtonElement>) => (
 	<button
-		className={[$$.button, size === 'small' && $$.small, className]
-			.filter(Boolean)
-			.join(' ')}
+		className={clsx(
+			$$.button,
+			{
+				[$$.small]: size === 'small',
+				[$$.large]: size === 'large',
+			},
+			className,
+		)}
 		{...properties}
 	>
 		{children}

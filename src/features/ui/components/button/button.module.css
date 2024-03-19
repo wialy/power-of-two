@@ -25,6 +25,13 @@
 	height: 2em;
 }
 
+.button.large {
+	padding: 0 2em;
+	min-width: 4em;
+	height: 4em;
+	font-size: 1.5rem;
+}
+
 @media (hover: hover) {
 	.button:hover:not(:active):not(:disabled) {
 		background-color: #242424;

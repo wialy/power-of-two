@@ -24,6 +24,9 @@ export const Navigation = () => (
 const Episodes = () => (
 	<Screen id="episodes">
 		<div className={$$.bar}>
+			<div className={$$.leftAction}>
+				<BackButton label="Back" />
+			</div>
 			<div className={$$.title}>Episodes</div>
 			<div className={$$.subtitle}>Please choose the episode</div>
 		</div>
@@ -93,15 +96,9 @@ const BackButton = ({ label = 'Back' }: { label?: string }) => {
 
 	const index = screens.indexOf(screen);
 
-	const isVisible = ['levels', 'game'].includes(screen);
-
 	const handleClick = () => {
 		setScreen(screens[index - 1]);
 	};
-
-	if (!isVisible) {
-		return null;
-	}
 
 	return (
 		<Button onClick={handleClick}>

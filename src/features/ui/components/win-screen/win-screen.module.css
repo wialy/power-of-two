@@ -15,7 +15,7 @@
 .stats {
 	display: flex;
 	gap: 1rem;
-	padding: 1rem;
+	padding: 0.5rem;
 }
 
 .stat {
@@ -26,7 +26,7 @@
 	border-radius: 1rem;
 	padding: 1rem;
 	align-items: center;
-	min-width: 96px;
+	min-width: 4rem;
 }
 
 .title {

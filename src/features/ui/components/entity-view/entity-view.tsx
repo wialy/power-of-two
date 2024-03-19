@@ -22,7 +22,7 @@ const DICE_COLORS = [
 	'#B10DC9', //32
 	'#FF4136', //64
 ];
-const FLOOR_COLOR = 'rgba(255,255,255,0.1)';
+const FLOOR_COLOR = 'rgba(255,255,255,0.05)';
 const DIRECTION_COLOR = 'rgba(255,255,255,0.4)';
 const MOVABLE_COLOR = '#DADEDF';
 const DEFORMATION_FACTOR = 0.05;

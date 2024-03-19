@@ -8,6 +8,7 @@
 	appearance: none;
 	border: none;
 	cursor: pointer;
+	gap: 0.5rem;
 }
 
 .name {
@@ -16,4 +17,14 @@
 
 .description {
 	font-size: 1rem;
+}
+
+.symbols {
+	display: flex;
+	align-items: center;
+	background-color: var(--color-navy);
+	height: 3rem;
+	justify-content: center;
+	padding-left: 1.75rem;
+	border-radius: 0.5rem;
 }
