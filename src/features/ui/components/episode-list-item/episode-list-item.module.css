@@ -1,0 +1,19 @@
+.container {
+	display: flex;
+	background-color: white;
+	flex-direction: column;
+	padding: 1rem;
+	border-radius: 0.5rem;
+	text-align: start;
+	appearance: none;
+	border: none;
+	cursor: pointer;
+}
+
+.name {
+	font-weight: bold;
+}
+
+.description {
+	font-size: 1rem;
+}

@@ -1,0 +1,13 @@
+.container {
+	overflow-x: hidden;
+	overflow-y: scroll;
+	max-height: 100%;
+}
+
+.levels {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 1rem;
+	padding: 1rem;
+}
