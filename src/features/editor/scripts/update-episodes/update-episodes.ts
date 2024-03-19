@@ -49,7 +49,9 @@ export const updateEpisodes = () => {
 			separator: ' ',
 		}) as string;
 
-		episodes.push({ levels: data.length, name, symbols });
+		if (data.length > 0) {
+			episodes.push({ levels: data.length, name, symbols });
+		}
 	}
 
 	const sortedEpisodes = episodes
@@ -70,5 +72,14 @@ export const updateEpisodes = () => {
 		JSON.stringify(sortedEpisodes, null, 2),
 	);
 
-	console.log(`Created ${sortedEpisodes.length} episodes`);
+	for (const [index, episode] of sortedEpisodes.entries()) {
+		console.log(
+			[
+				(index + 1).toString().padStart(2, ' '),
+				episode.levels.toString().padStart(3, ' '),
+				episode.name.padEnd(20, ' '),
+				episode.symbols.padEnd(20, ' '),
+			].join(' '),
+		);
+	}
 };

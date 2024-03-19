@@ -70,6 +70,8 @@ const fileName = `${sortedSymbols}.json`;
 const path = `${folder}/${fileName}`;
 // read file if exists
 
+const absolutePath = `${process.cwd()}/${path}`;
+
 if (fs.existsSync(path)) {
 	// append to file
 	const file = fs.readFileSync(path, 'utf8');
@@ -85,13 +87,13 @@ if (fs.existsSync(path)) {
 
 	const newLevels = getSortedLevels(uniqueLevels);
 
-	console.log(`Appending to ${fileName}, ${newLevels.length} levels total`);
+	console.log(`Appending to ${absolutePath}, ${newLevels.length} levels total`);
 	fs.writeFileSync(path, serialize(newLevels));
 	process.exit(0);
 }
 
 const file = fs.createWriteStream(path);
 
-console.log(`Creating new file ${fileName}, ${levels.length} levels total`);
+console.log(`Creating new file ${absolutePath}, ${levels.length} levels total`);
 file.write(serialize(getSortedLevels(levels)));
 file.end();
