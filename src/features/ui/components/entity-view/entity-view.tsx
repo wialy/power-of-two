@@ -128,8 +128,8 @@ export const EntityView = ({
 	const symbol = getSymbol(entity);
 	const symbolColor = getSymbolColor(entity);
 
-	let transform = `translate(${entity.position.x * TILE_SIZE}px, ${
-		entity.position.y * TILE_SIZE
+	let transform = `translate(${entity.position.x * TILE_SIZE * (scale ?? 1)}px, ${
+		entity.position.y * TILE_SIZE * (scale ?? 1)
 	}px)`;
 
 	if (scale !== undefined) {
