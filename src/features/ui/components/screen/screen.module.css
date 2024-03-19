@@ -1,0 +1,19 @@
+.screen {
+	position: absolute;
+	inset: 0;
+	transform: translateY(0);
+	transition: transform 0.3s ease-in-out;
+	overflow: hidden;
+}
+
+.hidden {
+	pointer-events: none;
+}
+
+.hidden.up {
+	transform: translateY(-100%);
+}
+
+.hidden.down {
+	transform: translateY(100%);
+}
