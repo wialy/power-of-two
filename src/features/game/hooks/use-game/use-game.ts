@@ -5,6 +5,7 @@ import { Entity, isDice, isMovable } from '../../../engine/types/entities';
 import { Level } from '../../../engine/types/game';
 import { getIsSameVector } from '../../../engine/utils/get-is-same-vector';
 import { useGameState } from '../use-game-state';
+import { useHighscores } from '../use-highscores';
 import { useGameAnimation } from './use-game-animation';
 
 const getSortedMovables = (entities: Entity[]) =>
@@ -23,7 +24,8 @@ export const useGame = ({
 	disabled?: boolean;
 	level: Level;
 }) => {
-	const { countMove, setScreen } = useGameState();
+	const { countMove, level, moves, setScreen } = useGameState();
+	const { save } = useHighscores();
 
 	const [entities, setEntities] = useState<Entity[]>([...boardEntities]);
 	const [isLocked, setIsLocked] = useState(false);
@@ -110,8 +112,9 @@ export const useGame = ({
 
 		if (allOnTarget) {
 			setScreen('won');
+			save({ levelId: level, moves: moves + 1 });
 		}
-	}, [entities, setScreen]);
+	}, [entities, level, moves, save, setScreen]);
 
 	return { entities, isLocked, setEntities };
 };
