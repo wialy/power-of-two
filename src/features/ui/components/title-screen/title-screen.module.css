@@ -1,0 +1,9 @@
+.titleScreen {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: var(--color-black);
+	color: var(--color-white);
+	flex-direction: column;
+	gap: 2rem;
+}

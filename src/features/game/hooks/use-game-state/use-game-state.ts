@@ -10,7 +10,6 @@ export const useGameState = create<GameState>((set, get) => ({
 		set({ moves: newMoves });
 
 		if (newMoves >= maxMoves) {
-			get().setPhase('lost');
 			get().setScreen('lost');
 		}
 	},
@@ -29,14 +28,13 @@ export const useGameState = create<GameState>((set, get) => ({
 			get().setScreen('game');
 		}, 0);
 	},
-	screen: 'episodes',
-	screens: ['episodes', 'levels', 'game', 'lost', 'won'],
+	screen: 'title',
+	screens: ['title', 'episodes', 'levels', 'game', 'lost', 'won'],
 	setEpisode: (episode) => set({ episode }),
 	setLevel(level) {
 		set({ level, moves: 0 });
 	},
 	setMaxMoves: (maxMoves) => set({ maxMoves }),
 	setMoves: (moves) => set({ moves }),
-	setPhase: (phase) => set({ phase }),
 	setScreen: (screen) => set({ screen }),
 }));

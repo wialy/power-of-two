@@ -12,10 +12,17 @@ export type GameState = {
 	countMove: () => void;
 	maxMoves: number;
 	setMaxMoves: (maxMoves: number) => void;
-	phase: GamePhase;
-	setPhase: (phase: GamePhase) => void;
 };
 
-export type ScreenId = 'episodes' | 'levels' | 'game' | 'won' | 'lost';
+export type ScreenId =
+	| 'episodes'
+	| 'levels'
+	| 'game'
+	| 'won'
+	| 'lost'
+	| 'title';
 
-export type GamePhase = 'playing' | 'won' | 'lost';
+export type Highscore = {
+	levelId: string;
+	moves: number;
+};
