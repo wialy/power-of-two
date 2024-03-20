@@ -2,11 +2,13 @@
 //@ts-expect-error
 import codenamize from '@codenamize/codenamize';
 
+import { VECTOR_ZERO } from '../../../engine/constants';
 import { Entity } from '../../../engine/types/entities';
 import {
 	getResolution,
 	ResolutionStep,
 } from '../../../engine/utils/get-resolution';
+import { getArrowSymbol } from '../../../ui/utils/get-arrow-symbol';
 import { MAX_GRID_HEIGHT, MAX_GRID_WIDTH } from '../../constants';
 import { LevelRecord } from '../../types';
 import { createLevel } from '../../utils/create-level';
@@ -72,6 +74,10 @@ export const createLevels = async ({
 				seed.toString().padStart(5, ' '),
 				steps.length.toString().padStart(3, ' '),
 				resolution.iteration.toString().padStart(6, ' '),
+				steps
+					.map((step) => getArrowSymbol(step.velocity ?? VECTOR_ZERO))
+					.join('')
+					.padStart(20, ' '),
 				levelId.padStart(MAX_GRID_HEIGHT * MAX_GRID_WIDTH, ' '),
 				name,
 			].join('\t'),
