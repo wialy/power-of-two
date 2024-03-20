@@ -1,6 +1,7 @@
 import { useHotkeys } from 'react-hotkeys-hook';
 
 import { useEpisodes } from '../../../editor/hooks/use-episodes';
+import { useCoins } from '../../../game/hooks/use-coins';
 import { useGameState } from '../../../game/hooks/use-game-state';
 import { Button } from '../button';
 import { Icon } from '../icon';
@@ -55,6 +56,7 @@ const Levels = () => {
 
 const Game = () => {
 	const { maxMoves, moves, restart, screen } = useGameState();
+	const { coins } = useCoins();
 
 	const isVisible = screen === 'game';
 
@@ -66,8 +68,16 @@ const Game = () => {
 				<div className={$$.leftAction}>
 					<BackButton label="Levels" />
 				</div>
-				<div className={$$.subtitle}>Moves</div>
-				<div className={$$.title}>{maxMoves - moves}</div>
+				<div className={$$.row}>
+					<div className={$$.column}>
+						<div className={$$.subtitle}>Moves</div>
+						<div className={$$.title}>{maxMoves - moves}</div>
+					</div>
+					<div className={$$.column}>
+						<div className={$$.subtitle}>Coins</div>
+						<div className={$$.title}>${coins}</div>
+					</div>
+				</div>
 				<div className={$$.rightAction}>
 					<Button onClick={restart}>
 						<Icon name="restart" />

@@ -3,8 +3,9 @@ import { useDebouncedCallback } from 'use-debounce';
 
 import { VECTOR_ZERO } from '../../../engine/constants';
 import { Entity, isDice, isMovable } from '../../../engine/types/entities';
-import { getIsSameVector } from '../../../engine/utils/get-is-same-vector';
+import { getReward } from '../../utils';
 import { useBoard } from '../use-board';
+import { useCoins } from '../use-coins';
 import { useGameState } from '../use-game-state';
 import { useHighscores } from '../use-highscores';
 import { useGameAnimation } from './use-game-animation';
@@ -19,10 +20,10 @@ const getSnapshot = (entities: Entity[]) =>
 	JSON.stringify(getSortedMovables(entities));
 
 export const useGame = ({ disabled }: { disabled?: boolean }) => {
-	const { countMove, level, moves, setScreen } = useGameState();
-	const { save } = useHighscores();
+	const { countMove, level, maxMoves, moves, setScreen } = useGameState();
+	const { highscores, save } = useHighscores();
+	const { reward } = useCoins();
 
-	// const [entities, setEntities] = useState<Entity[]>([...boardEntities]);
 	const { entities, setEntities } = useBoard();
 	const [isLocked, setIsLocked] = useState(false);
 	const isMounted = useRef(false);
@@ -32,6 +33,22 @@ export const useGame = ({ disabled }: { disabled?: boolean }) => {
 		entities,
 		setEntities,
 	});
+
+	const highscore = highscores.find(({ levelId }) => levelId === level);
+
+	const showWinScreen = useDebouncedCallback(() => {
+		setScreen('won');
+
+		const currentReward = getReward({ maxMoves, moves });
+		const previousReward = highscore?.moves
+			? getReward({ maxMoves, moves: highscore.moves })
+			: 0;
+
+		const amount = Math.max(currentReward - previousReward, 0);
+		reward(amount);
+
+		save({ levelId: level, moves });
+	}, 500);
 
 	useEffect(() => {
 		isMounted.current = true;
@@ -64,8 +81,6 @@ export const useGame = ({ disabled }: { disabled?: boolean }) => {
 			void (async () => {
 				await animate();
 
-				setIsLocked(false);
-
 				setEntities((current) => {
 					const result = current.map((entity) =>
 						isMovable(entity)
@@ -81,54 +96,34 @@ export const useGame = ({ disabled }: { disabled?: boolean }) => {
 					if (snapshot.current !== getSnapshot(result) && snapshot.current !== '') {
 						snapshot.current = '';
 						countMove();
+
+						if (result.length > 0) {
+							const dices = result.filter(isDice);
+
+							const allOnTarget = dices.every((dice) => dice.isOnTarget);
+
+							if (allOnTarget) {
+								showWinScreen();
+							} else {
+								setIsLocked(false);
+							}
+						}
 					}
 
 					return result;
 				});
 			})();
 		}
-	}, [animate, countMove, disabled, isAnimating, isLocked, setEntities]);
+	}, [
+		animate,
+		countMove,
+		disabled,
+		entities,
+		isAnimating,
+		isLocked,
+		setEntities,
+		showWinScreen,
+	]);
 
-	const showWinScreen = useDebouncedCallback(() => {
-		setScreen('won');
-		save({ levelId: level, moves: moves + 1 });
-	}, 500);
-
-	const [isComplete, setIsComplete] = useState(false);
-
-	useEffect(() => {
-		if (isComplete) {
-			return;
-		}
-
-		if (disabled) {
-			return;
-		}
-
-		if (entities.length === 0) {
-			return;
-		}
-
-		const dices = entities.filter(isDice);
-		const isAnyMoving = dices.some(
-			(dice) => !getIsSameVector(dice.velocity, VECTOR_ZERO),
-		);
-
-		if (isAnyMoving) {
-			return;
-		}
-
-		const allOnTarget = dices.every((dice) => dice.isOnTarget);
-
-		if (allOnTarget) {
-			setIsComplete(true);
-			showWinScreen();
-		}
-	}, [disabled, entities, isComplete, showWinScreen]);
-
-	useEffect(() => {
-		setIsComplete(false);
-	}, [entities]);
-
-	return { entities, isLocked };
+	return { isLocked };
 };

@@ -4,6 +4,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { useEpisodeLevels } from '../../../editor/hooks/use-episode-levels';
 import { getParsedLevelRecord } from '../../../editor/utils/get-parsed-level-record';
 import { MAX_MOVES_MULTIPLIER } from '../../../game/constants';
+import { useCoins } from '../../../game/hooks/use-coins';
 import { useGameState } from '../../../game/hooks/use-game-state';
 import { useHighscores } from '../../../game/hooks/use-highscores';
 import { Button } from '../button';
@@ -14,6 +15,8 @@ import $$ from './win-screen.module.css';
 export const WinScreenContent = () => {
 	const { episode, level, maxMoves, moves, restart, setLevel, setScreen } =
 		useGameState();
+
+	const { lastReward } = useCoins();
 
 	const { highscores } = useHighscores();
 	const { isFullyVisible } = useScreen();
@@ -71,7 +74,7 @@ export const WinScreenContent = () => {
 		}
 
 		if (highscore && moves === highscore.moves) {
-			return 'Personal best!';
+			return 'Personal Best!';
 		}
 
 		return moves < maxMoves ? 'Great job!' : 'Last Call!';
@@ -80,6 +83,7 @@ export const WinScreenContent = () => {
 	return (
 		<>
 			<h1>{title}</h1>
+			{lastReward !== 0 && <h2>Reward ${lastReward}</h2>}
 			<div className={$$.stats}>
 				<div className={$$.stat}>
 					<div className={$$.title}>Moves</div>

@@ -15,6 +15,10 @@
 	gap: 0.5rem;
 }
 
+.button svg {
+	color: var(--color-yellow);
+}
+
 .button:active:not(:disabled) {
 	background-color: #323232;
 	text-shadow: 0 0 10px white;

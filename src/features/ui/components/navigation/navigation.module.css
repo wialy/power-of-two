@@ -32,6 +32,21 @@
 	height: 100%;
 }
 
+.row {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 3rem;
+}
+
+.column {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
 .title {
 	font-size: 1rem;
 	color: var(--color-white);

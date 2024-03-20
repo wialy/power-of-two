@@ -53,7 +53,7 @@ export const BoardView = ({ board }: { board: Board }) => {
 				position: 'absolute',
 				top: '50%',
 				transform: `scale(${scale}) translate(${(-(width - 1) * TILE_SIZE) / 2}px, ${
-					(-(height - 1) * TILE_SIZE) / 2
+					(-(height - 0.25) * TILE_SIZE) / 2
 				}px)`,
 			}}
 		>
