@@ -38,6 +38,11 @@
 	gap: 1rem;
 }
 
+.button.large svg {
+	width: 3rem;
+	height: 3rem;
+}
+
 @media (hover: hover) {
 	.button:hover:not(:active):not(:disabled) {
 		background-color: #242424;
