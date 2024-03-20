@@ -1,15 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { VECTOR_ZERO } from '../../../engine/constants';
+import { Entity } from '../../../engine/types/entities';
 import { getResolution } from '../../../engine/utils/get-resolution';
 import { getArrowSymbol } from '../../../ui/utils/get-arrow-symbol';
-import { useEditorContext } from '../../contexts/editor-context';
 
-export const useSolution = () => {
-	const {
-		level: { entities },
-	} = useEditorContext();
-
+export const useSolution = ({ entities }: { entities: Entity[] }) => {
 	const [solution, setSolution] = useState<string | undefined>();
 	const [iterations, setIterations] = useState<number | undefined>();
 	const [steps, setSteps] = useState<number | undefined>();

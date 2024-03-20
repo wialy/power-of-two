@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 
 import { VECTOR_ZERO } from '../../../engine/constants';
 import { Entity, isDice, isMovable } from '../../../engine/types/entities';
-import { Level } from '../../../engine/types/game';
 import { getIsSameVector } from '../../../engine/utils/get-is-same-vector';
+import { useBoard } from '../use-board';
 import { useGameState } from '../use-game-state';
 import { useHighscores } from '../use-highscores';
 import { useGameAnimation } from './use-game-animation';
@@ -17,19 +17,13 @@ const getSortedMovables = (entities: Entity[]) =>
 const getSnapshot = (entities: Entity[]) =>
 	JSON.stringify(getSortedMovables(entities));
 
-export const useGame = ({
-	disabled,
-	level: { entities: boardEntities },
-}: {
-	disabled?: boolean;
-	level: Level;
-}) => {
+export const useGame = ({ disabled }: { disabled?: boolean }) => {
 	const { countMove, level, moves, setScreen } = useGameState();
 	const { save } = useHighscores();
 
-	const [entities, setEntities] = useState<Entity[]>([...boardEntities]);
+	// const [entities, setEntities] = useState<Entity[]>([...boardEntities]);
+	const { entities, setEntities } = useBoard();
 	const [isLocked, setIsLocked] = useState(false);
-
 	const isMounted = useRef(false);
 
 	const { animate, isAnimating } = useGameAnimation({
@@ -92,13 +86,13 @@ export const useGame = ({
 				});
 			})();
 		}
-	}, [animate, countMove, disabled, entities, isAnimating, isLocked]);
+	}, [animate, countMove, disabled, isAnimating, isLocked, setEntities]);
 
 	useEffect(() => {
-		setEntities([...boardEntities]);
-	}, [boardEntities]);
+		if (disabled) {
+			return;
+		}
 
-	useEffect(() => {
 		const dices = entities.filter(isDice);
 		const isAnyMoving = dices.some(
 			(dice) => !getIsSameVector(dice.velocity, VECTOR_ZERO),
@@ -114,7 +108,7 @@ export const useGame = ({
 			setScreen('won');
 			save({ levelId: level, moves: moves + 1 });
 		}
-	}, [entities, level, moves, save, setScreen]);
+	}, [disabled, entities, level, moves, save, setScreen]);
 
-	return { entities, isLocked, setEntities };
+	return { entities, isLocked };
 };

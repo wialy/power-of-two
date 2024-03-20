@@ -4,6 +4,7 @@ import { Entity } from '../../../engine/types/entities';
 import { getNextBoardState } from '../../../engine/utils/get-next-board-state';
 import { getShouldUpdate } from '../../../engine/utils/get-should-update';
 import { MOVE_DURATION } from '../../../ui/constants';
+import { SetEntities } from '../use-board';
 
 export const useGameAnimation = ({
 	disabled,
@@ -11,7 +12,7 @@ export const useGameAnimation = ({
 	setEntities,
 }: {
 	entities: Entity[];
-	setEntities: (entities: Entity[]) => void;
+	setEntities: SetEntities;
 	disabled?: boolean;
 }) => {
 	const [isAnimating, setIsAnimating] = useState(false);

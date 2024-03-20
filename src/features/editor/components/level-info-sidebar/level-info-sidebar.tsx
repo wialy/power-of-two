@@ -9,7 +9,9 @@ import $$ from './level-info-sidebar.module.css';
 
 export const LevelInfoSidebar = () => {
 	const { level, seed, setSeed } = useEditorContext();
-	const { iterations, solution, solve, steps } = useSolution();
+	const { iterations, solution, solve, steps } = useSolution({
+		entities: level.entities,
+	});
 
 	const handleSolveTriggered = () => {
 		void solve();
