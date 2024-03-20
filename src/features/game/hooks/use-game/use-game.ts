@@ -108,6 +108,8 @@ export const useGame = ({ disabled }: { disabled?: boolean }) => {
 								setIsLocked(false);
 							}
 						}
+					} else {
+						setIsLocked(false);
 					}
 
 					return result;
