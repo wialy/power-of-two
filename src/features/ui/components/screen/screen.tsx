@@ -1,9 +1,11 @@
 import clsx from 'clsx';
-import { HTMLAttributes, useEffect, useRef, useState } from 'react';
+import { HTMLAttributes } from 'react';
 
 import { useGameState } from '../../../game/hooks/use-game-state';
 import { ScreenId } from '../../../game/types';
 import $$ from './screen.module.css';
+import { ScreenContent } from './screen-content';
+import { ScreenProvider } from './screen-provider';
 
 export const Screen = ({
 	children,
@@ -16,47 +18,29 @@ export const Screen = ({
 } & HTMLAttributes<HTMLDivElement>) => {
 	const { screen, screens } = useGameState();
 
-	const isHidden = screen !== id;
-	const [isFullyHidden, setIsFullyHidden] = useState(isHidden);
+	const currentScreenIndex = screens.indexOf(screen);
+	const targetScreenIndex = screens.indexOf(id);
 
-	const direction = screens.indexOf(id) < screens.indexOf(screen) ? 1 : -1;
+	const direction = Math.sign(currentScreenIndex - targetScreenIndex);
 
-	const timeoutReference = useRef<ReturnType<typeof setTimeout>>();
-
-	useEffect(() => {
-		if (timeoutReference.current) {
-			clearTimeout(timeoutReference.current);
-		}
-
-		if (isHidden) {
-			timeoutReference.current = setTimeout(() => {
-				setIsFullyHidden(true);
-			}, 500);
-		} else {
-			setIsFullyHidden(false);
-		}
-
-		return () => {
-			if (timeoutReference.current) {
-				clearTimeout(timeoutReference.current);
-			}
-		};
-	}, [isHidden]);
+	const isVisible = screen === id;
 
 	return (
-		<div
-			className={clsx(
-				$$.screen,
-				{
-					[$$.hidden]: isHidden,
-					[$$.up]: direction === 1,
-					[$$.down]: direction === -1,
-				},
-				className,
-			)}
-			{...properties}
-		>
-			{!isFullyHidden && children}
-		</div>
+		<ScreenProvider isVisible={isVisible}>
+			<div
+				className={clsx(
+					$$.screen,
+					{
+						[$$.hidden]: !isVisible,
+						[$$.up]: direction === 1,
+						[$$.down]: direction === -1,
+					},
+					className,
+				)}
+				{...properties}
+			>
+				<ScreenContent>{children}</ScreenContent>
+			</div>
+		</ScreenProvider>
 	);
 };
