@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
 
 import { VECTOR_ZERO } from '../../../engine/constants';
 import { Entity, isDice, isMovable } from '../../../engine/types/entities';
@@ -88,8 +89,23 @@ export const useGame = ({ disabled }: { disabled?: boolean }) => {
 		}
 	}, [animate, countMove, disabled, isAnimating, isLocked, setEntities]);
 
+	const showWinScreen = useDebouncedCallback(() => {
+		setScreen('won');
+		save({ levelId: level, moves: moves + 1 });
+	}, 500);
+
+	const [isComplete, setIsComplete] = useState(false);
+
 	useEffect(() => {
+		if (isComplete) {
+			return;
+		}
+
 		if (disabled) {
+			return;
+		}
+
+		if (entities.length === 0) {
 			return;
 		}
 
@@ -105,10 +121,14 @@ export const useGame = ({ disabled }: { disabled?: boolean }) => {
 		const allOnTarget = dices.every((dice) => dice.isOnTarget);
 
 		if (allOnTarget) {
-			setScreen('won');
-			save({ levelId: level, moves: moves + 1 });
+			setIsComplete(true);
+			showWinScreen();
 		}
-	}, [disabled, entities, level, moves, save, setScreen]);
+	}, [disabled, entities, isComplete, showWinScreen]);
+
+	useEffect(() => {
+		setIsComplete(false);
+	}, [entities]);
 
 	return { entities, isLocked };
 };
