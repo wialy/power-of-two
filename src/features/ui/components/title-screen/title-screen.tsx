@@ -2,6 +2,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 
 import { useGameState } from '../../../game/hooks/use-game-state';
 import { Button } from '../button';
+import { Icon } from '../icon';
 import { Logo } from '../logo';
 import { Screen } from '../screen';
 import $$ from './title-screen.module.css';
@@ -28,6 +29,7 @@ export const TitleScreen = () => {
 				size="large"
 				onClick={handleStartClick}
 			>
+				<Icon name="pad" />
 				Play
 			</Button>
 		</Screen>
