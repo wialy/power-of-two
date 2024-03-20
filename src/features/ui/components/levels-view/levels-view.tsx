@@ -1,11 +1,13 @@
 import { useEpisodeLevels } from '../../../editor/hooks/use-episode-levels';
 import { getParsedLevelRecord } from '../../../editor/utils/get-parsed-level-record';
+import { useGameState } from '../../../game/hooks/use-game-state';
 import { useHighscores } from '../../../game/hooks/use-highscores';
 import { LevelListItem } from '../level-list-item';
 import $$ from './levels-view.module.css';
 
 export const LevelsView = () => {
-	const { isLoading, levels } = useEpisodeLevels();
+	const { episode } = useGameState();
+	const { isLoading, levels } = useEpisodeLevels({ episode });
 	const { highscores } = useHighscores();
 
 	if (isLoading) {

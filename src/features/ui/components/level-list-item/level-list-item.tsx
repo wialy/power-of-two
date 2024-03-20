@@ -1,4 +1,5 @@
-import { memo, useLayoutEffect, useRef } from 'react';
+import clsx from 'clsx';
+import { memo, useEffect, useRef } from 'react';
 
 import { LevelRecord } from '../../../editor/types';
 import { getIdEntities } from '../../../editor/utils/get-id-entities';
@@ -8,6 +9,7 @@ import { useGameState } from '../../../game/hooks/use-game-state';
 import { Highscore } from '../../../game/types';
 import { TILE_SIZE } from '../../constants';
 import { EntityView } from '../entity-view';
+import { Icon } from '../icon';
 import $$ from './level-list-item.module.css';
 
 export const LevelListItem = ({
@@ -21,6 +23,8 @@ export const LevelListItem = ({
 }) => {
 	const { setLevel, setMaxMoves, setScreen } = useGameState();
 
+	const isPro = highscore && highscore.moves <= steps;
+
 	const handleClick = () => {
 		setLevel(id);
 		setMaxMoves(steps * MAX_MOVES_MULTIPLIER);
@@ -29,7 +33,7 @@ export const LevelListItem = ({
 
 	const reference = useRef<HTMLButtonElement>(null);
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		if (
 			!isLocked &&
 			highscore === undefined &&
@@ -47,7 +51,7 @@ export const LevelListItem = ({
 		return (
 			<button
 				disabled
-				className={$$.container}
+				className={clsx($$.container, $$.locked)}
 			>
 				<Preview
 					isLocked
@@ -55,9 +59,6 @@ export const LevelListItem = ({
 				/>
 				<div className={$$.info}>
 					<div className={$$.name}>{name}</div>
-					<div className={$$.scores}>
-						<div>🔒 Locked</div>
-					</div>
 				</div>
 			</button>
 		);
@@ -66,7 +67,10 @@ export const LevelListItem = ({
 	return (
 		<button
 			ref={reference}
-			className={$$.container}
+			className={clsx($$.container, {
+				[$$.pro]: isPro,
+				[$$.completed]: !isPro && highscore !== undefined,
+			})}
 			onClick={handleClick}
 		>
 			<Preview id={id} />
@@ -77,6 +81,11 @@ export const LevelListItem = ({
 					<div>Pro {steps}</div>
 				</div>
 			</div>
+			{Boolean(isPro) && (
+				<div className={$$.badge}>
+					<Icon name="pro" />
+				</div>
+			)}
 		</button>
 	);
 };
@@ -91,7 +100,7 @@ const Preview = memo(({ id, isLocked }: { id: string; isLocked?: boolean }) => {
 
 	return (
 		<div className={$$.previewContainer}>
-			{Boolean(isLocked) && <div className={$$.locked}>🔒</div>}
+			{Boolean(isLocked) && <div className={$$.lock}>🔒</div>}
 			{!isLocked && (
 				<pre
 					style={{

@@ -12,13 +12,13 @@ import { useScreen } from '../screen/screen-provider';
 import $$ from './win-screen.module.css';
 
 export const WinScreenContent = () => {
-	const { level, maxMoves, moves, restart, setLevel, setScreen } =
+	const { episode, level, maxMoves, moves, restart, setLevel, setScreen } =
 		useGameState();
 
 	const { highscores } = useHighscores();
 	const { isFullyVisible } = useScreen();
 
-	const { isLoading, levels } = useEpisodeLevels();
+	const { isLoading, levels } = useEpisodeLevels({ episode });
 
 	const levelIndex = useMemo(() => {
 		if (isLoading) {

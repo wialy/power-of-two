@@ -8,16 +8,25 @@
 	appearance: none;
 	border: none;
 	cursor: pointer;
-	gap: 0.5rem;
+	gap: 1.5rem;
+	color: black;
 }
 
 .name {
 	font-weight: bold;
 	font-size: 1.5rem;
+	text-transform: uppercase;
 }
 
 .description {
 	font-size: 1rem;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.description svg {
+	color: var(--color-orange);
 }
 
 .symbols {

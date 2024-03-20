@@ -1,11 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { useGameState } from '../../../game/hooks/use-game-state';
 import { SerializedLevelRecord } from '../../types';
 import { useEpisodes } from '../use-episodes';
 
-export const useEpisodeLevels = () => {
-	const { episode } = useGameState();
+export const useEpisodeLevels = ({ episode }: { episode: string }) => {
 	const { episodes } = useEpisodes();
 	const [levels, setLevels] = useState<SerializedLevelRecord[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
