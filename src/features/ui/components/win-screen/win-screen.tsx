@@ -7,6 +7,7 @@ import { MAX_MOVES_MULTIPLIER } from '../../../game/constants';
 import { useGameState } from '../../../game/hooks/use-game-state';
 import { useHighscores } from '../../../game/hooks/use-highscores';
 import { Button } from '../button';
+import { Icon } from '../icon';
 import { Screen } from '../screen';
 import $$ from './win-screen.module.css';
 
@@ -69,7 +70,7 @@ export const WinScreen = () => {
 			return 'Like a pro!';
 		}
 
-		return moves < maxMoves ? 'Great job!' : 'Level Complete!';
+		return moves < maxMoves ? 'Great job!' : 'Last Call!';
 	}, [moves, pro, maxMoves]);
 
 	return (
@@ -94,9 +95,18 @@ export const WinScreen = () => {
 			</div>
 
 			<div className={$$.buttons}>
-				<Button onClick={handleExitClick}>&larr;&nbsp;Exit</Button>
-				<Button onClick={handleRestartClick}>↻&nbsp;Restart</Button>
-				<Button onClick={handleNextClick}>Next&nbsp;&rarr;</Button>
+				<Button onClick={handleExitClick}>
+					<Icon name="exit" />
+					Exit
+				</Button>
+				<Button onClick={handleRestartClick}>
+					<Icon name="restart" />
+					Restart
+				</Button>
+				<Button onClick={handleNextClick}>
+					Next
+					<Icon name="arrowRight" />
+				</Button>
 			</div>
 		</Screen>
 	);

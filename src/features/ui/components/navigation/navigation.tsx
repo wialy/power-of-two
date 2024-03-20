@@ -3,6 +3,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { useEpisodes } from '../../../editor/hooks/use-episodes';
 import { useGameState } from '../../../game/hooks/use-game-state';
 import { Button } from '../button';
+import { Icon } from '../icon';
 import { Screen } from '../screen';
 import { ScreenContainer } from '../screen-container';
 import $$ from './navigation.module.css';
@@ -68,7 +69,10 @@ const Game = () => {
 				<div className={$$.subtitle}>Moves</div>
 				<div className={$$.title}>{maxMoves - moves}</div>
 				<div className={$$.rightAction}>
-					<Button onClick={restart}>↻&nbsp;Restart</Button>
+					<Button onClick={restart}>
+						<Icon name="restart" />
+						<span className={$$.buttonText}>Restart</span>
+					</Button>
 				</div>
 			</div>
 		</Screen>
@@ -86,7 +90,7 @@ const OutOfMoves = () => (
 const Win = () => (
 	<Screen id="won">
 		<div className={$$.bar}>
-			<div className={$$.title}>Victory!</div>
+			<div className={$$.title}>Level Complete!</div>
 		</div>
 	</Screen>
 );
@@ -102,7 +106,8 @@ const BackButton = ({ label = 'Back' }: { label?: string }) => {
 
 	return (
 		<Button onClick={handleClick}>
-			&larr;<span className={$$.buttonText}>&nbsp;{label}</span>
+			<Icon name="arrowLeft" />
+			<span className={$$.buttonText}>{label}</span>
 		</Button>
 	);
 };

@@ -2,6 +2,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 
 import { useGameState } from '../../../game/hooks/use-game-state';
 import { Button } from '../button';
+import { Icon } from '../icon';
 import { Screen } from '../screen';
 import $$ from './out-of-moves-screen.module.css';
 
@@ -29,8 +30,13 @@ export const OutOfMovesScreen = () => {
 		>
 			<h1>Out Of Moves</h1>
 			<div className={$$.buttons}>
-				<Button onClick={handleExitClick}>&larr; Exit</Button>
-				<Button onClick={handleRestartClick}>Restart &rarr;</Button>
+				<Button onClick={handleExitClick}>
+					<Icon name="exit" /> Exit
+				</Button>
+				<Button onClick={handleRestartClick}>
+					<Icon name="restart" />
+					Restart
+				</Button>
 			</div>
 		</Screen>
 	);

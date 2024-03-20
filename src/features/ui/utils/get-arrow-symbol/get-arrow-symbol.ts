@@ -1,5 +1,5 @@
-export const ARROW_SET_SIMPLE = '⏹↓↑→←';
-export const ARROW_SET_TRIANGLE = '⏹▼▲►◄';
+export const ARROW_SET_SIMPLE = '■↓↑→←';
+export const ARROW_SET_TRIANGLE = '■▼▲►◄';
 
 export const ARROW_SET_LETTERS = 'SDURL';
 
