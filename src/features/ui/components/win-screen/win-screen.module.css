@@ -4,7 +4,6 @@
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
-	gap: 1rem;
 }
 
 .buttons {
@@ -17,7 +16,7 @@
 .stats {
 	display: flex;
 	gap: 1rem;
-	padding: 0.5rem;
+	padding: 2rem 0.5rem;
 }
 
 .stat {
