@@ -12,7 +12,7 @@ import { useScreen } from '../screen/screen-provider';
 import { SwipeArea } from '../swipe-area';
 
 export const GameView = () => {
-	const { level } = useGameState();
+	const { level, maxMoves, moves } = useGameState();
 	const { entities, setEntities } = useBoard();
 	const { clearLastReward } = useCoins();
 
@@ -20,11 +20,11 @@ export const GameView = () => {
 
 	const disabled = !isFullyVisible;
 
-	const { isLocked } = useGame({
+	const { isEnded, isLocked } = useGame({
 		disabled,
 	});
 
-	const controlsDisabled = isLocked || disabled;
+	const controlsDisabled = isLocked || isEnded || disabled || moves >= maxMoves;
 
 	const { swipeProps } = useControls({
 		disabled: controlsDisabled,

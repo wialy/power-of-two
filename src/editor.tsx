@@ -15,9 +15,12 @@ const Editor = () => {
 	const { level } = useEditorContext();
 
 	const { entities, setEntities } = useBoard();
-	const { isLocked } = useGame({});
+	const { isEnded, isLocked } = useGame({});
 
-	const { swipeProps } = useControls({ disabled: isLocked, setEntities });
+	const { swipeProps } = useControls({
+		disabled: isEnded || isLocked,
+		setEntities,
+	});
 
 	useEffect(() => {
 		setEntities(level.entities);

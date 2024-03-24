@@ -30,6 +30,7 @@ export const useGame = ({ disabled }: { disabled?: boolean }) => {
 
 	const { entities, setEntities } = useBoard();
 	const [isLocked, setIsLocked] = useState(false);
+	const [isEnded, setIsEnded] = useState(false);
 	const isMounted = useRef(false);
 
 	const { animate, isAnimating } = useGameAnimation({
@@ -52,10 +53,6 @@ export const useGame = ({ disabled }: { disabled?: boolean }) => {
 		reward(amount);
 
 		save({ levelId: level, moves });
-	}, HIDE_DELAY);
-
-	const showOutOfMovesScreen = useDebouncedCallback(() => {
-		setScreen('lost');
 	}, HIDE_DELAY);
 
 	const showUnsolvableScreen = useDebouncedCallback(() => {
@@ -119,12 +116,14 @@ export const useGame = ({ disabled }: { disabled?: boolean }) => {
 					}
 
 					if (getIsUnsolvable({ entities: result })) {
+						setIsEnded(true);
 						showUnsolvableScreen();
 
 						return result;
 					}
 
 					if (getIsResolved({ entities: result })) {
+						setIsEnded(true);
 						showWinScreen();
 
 						return result;
@@ -144,10 +143,13 @@ export const useGame = ({ disabled }: { disabled?: boolean }) => {
 		isAnimating,
 		isLocked,
 		setEntities,
-		showOutOfMovesScreen,
 		showUnsolvableScreen,
 		showWinScreen,
 	]);
 
-	return { isLocked };
+	useEffect(() => {
+		setIsEnded(false);
+	}, [level]);
+
+	return { isEnded, isLocked };
 };
