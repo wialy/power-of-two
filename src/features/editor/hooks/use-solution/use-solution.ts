@@ -30,7 +30,7 @@ export const useSolution = ({ entities }: { entities: Entity[] }) => {
 
 		if (symbols.length > 0) {
 			setSteps(symbols.length);
-			setSolution(`💡 ${symbols.reverse().join('')}`);
+			setSolution(`💡 ${symbols.join('')}`);
 		} else {
 			setSteps(undefined);
 			setIterations(undefined);
