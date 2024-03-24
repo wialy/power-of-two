@@ -20,21 +20,23 @@ const serialize = (levels: LevelRecord[]) =>
 
 // read from script arguments
 const options = cli([
-	{ alias: 's', defaultValue: 3, name: 'steps', type: Number },
+	{ alias: 'm', defaultValue: 3, name: 'moves', type: Number },
 	{ alias: 't', defaultValue: 100, name: 'total', type: Number },
 	{ alias: 'f', defaultValue: 0, name: 'from', type: Number },
 	{ alias: 'h', name: 'help', type: Boolean },
 	{ alias: 'e', defaultValue: 'oooo0q', name: 'entities' },
+	{ alias: 's', defaultValue: false, name: 'save', type: Boolean },
 ]);
 
-const { entities: symbols, from, help, steps, total } = options;
+const { entities: symbols, from, help, moves, save, total } = options;
 
 if (help) {
 	console.log('Options:');
-	console.log('-s, --steps:\t\tminimum steps for the level');
+	console.log('-m, --moves:\t\tminimum moves for the level');
 	console.log('-e, --entities:\t\tstring of entity symbols');
 	console.log('-f, --from:\t\tstart seed');
 	console.log('-t, --total:\t\ttotal levels to generate');
+	console.log('-s, --save:\t\tsave to file');
 	console.log('-h, --help:\t\tshow this help');
 	process.exit(0);
 }
@@ -42,7 +44,7 @@ if (help) {
 const sortedSymbols = [...(symbols as string)].sort().join('');
 
 console.log(
-	`Creating ${total} levels with ${sortedSymbols} symbols starting from ${from} and minimum ${steps} steps`,
+	`Creating ${total} levels with ${sortedSymbols} symbols starting from ${from} and minimum ${moves} moves`,
 );
 
 const entities = [...sortedSymbols]
@@ -56,21 +58,30 @@ if (entities.length !== sortedSymbols.length) {
 
 const levels = await createLevels({
 	entities,
-	minSteps: steps,
+	minSteps: moves,
 	start: from,
 	total,
 });
 
 console.log(`Created ${levels.length} levels`);
 
+if (!save) {
+	process.exit(0);
+}
+
+// write to file
+
 const folder = './public/levels';
 
 const fileName = `${sortedSymbols}.json`;
 
 const path = `${folder}/${fileName}`;
+
 // read file if exists
 
 const absolutePath = `${process.cwd()}/${path}`;
+
+console.log(`📄 ${absolutePath}`);
 
 if (fs.existsSync(path)) {
 	// append to file
@@ -79,21 +90,29 @@ if (fs.existsSync(path)) {
 	const levelsData = data.map(getParsedLevelRecord);
 
 	const uniqueLevels: LevelRecord[] = [];
+
 	for (const level of [...levelsData, ...levels]) {
-		if (!uniqueLevels.some(({ id }) => id === level.id)) {
-			uniqueLevels.push(level);
+		if (uniqueLevels.some(({ id }) => id === level.id)) {
+			continue;
 		}
+
+		uniqueLevels.push(level);
 	}
 
 	const newLevels = getSortedLevels(uniqueLevels);
 
-	console.log(`Appending to ${absolutePath}, ${newLevels.length} levels total`);
-	fs.writeFileSync(path, serialize(newLevels));
+	console.log(
+		`Appending ${newLevels.length} levels, ${uniqueLevels.length} total`,
+	);
+	// drive emojis and filename
+
+	fs.writeFileSync(path, serialize(uniqueLevels));
 	process.exit(0);
 }
 
 const file = fs.createWriteStream(path);
 
-console.log(`Creating new file ${absolutePath}, ${levels.length} levels total`);
+console.log(`Saving ${levels.length} new levels`);
+
 file.write(serialize(getSortedLevels(levels)));
 file.end();
