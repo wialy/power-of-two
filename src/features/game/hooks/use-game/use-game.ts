@@ -2,13 +2,17 @@ import { useEffect, useRef, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
 import { VECTOR_ZERO } from '../../../engine/constants';
-import { Entity, isDice, isMovable } from '../../../engine/types/entities';
+import { Entity, isMovable } from '../../../engine/types/entities';
+import { getIsResolved } from '../../../engine/utils/get-is-resolved';
+import { getIsUnsolvable } from '../../../engine/utils/get-is-unsolvable';
 import { getReward } from '../../utils';
 import { useBoard } from '../use-board';
 import { useCoins } from '../use-coins';
 import { useGameState } from '../use-game-state';
 import { useHighscores } from '../use-highscores';
 import { useGameAnimation } from './use-game-animation';
+
+const HIDE_DELAY = 500;
 
 const getSortedMovables = (entities: Entity[]) =>
 	entities
@@ -48,7 +52,15 @@ export const useGame = ({ disabled }: { disabled?: boolean }) => {
 		reward(amount);
 
 		save({ levelId: level, moves });
-	}, 500);
+	}, HIDE_DELAY);
+
+	const showOutOfMovesScreen = useDebouncedCallback(() => {
+		setScreen('lost');
+	}, HIDE_DELAY);
+
+	const showUnsolvableScreen = useDebouncedCallback(() => {
+		setScreen('unsolvable');
+	}, HIDE_DELAY);
 
 	useEffect(() => {
 		isMounted.current = true;
@@ -93,21 +105,29 @@ export const useGame = ({ disabled }: { disabled?: boolean }) => {
 							: entity,
 					);
 
-					if (snapshot.current !== getSnapshot(result) && snapshot.current !== '') {
-						snapshot.current = '';
-						countMove();
+					if (snapshot.current === '' || snapshot.current === getSnapshot(result)) {
+						setIsLocked(false);
 
-						if (result.length > 0) {
-							const dices = result.filter(isDice);
+						return result;
+					}
 
-							const allOnTarget = dices.every((dice) => dice.isOnTarget);
+					snapshot.current = '';
+					countMove();
 
-							if (allOnTarget) {
-								showWinScreen();
-							} else {
-								setIsLocked(false);
-							}
-						}
+					if (result.length === 0) {
+						return result;
+					}
+
+					if (getIsUnsolvable({ entities: result })) {
+						showUnsolvableScreen();
+
+						return result;
+					}
+
+					if (getIsResolved({ entities: result })) {
+						showWinScreen();
+
+						return result;
 					} else {
 						setIsLocked(false);
 					}
@@ -124,6 +144,8 @@ export const useGame = ({ disabled }: { disabled?: boolean }) => {
 		isAnimating,
 		isLocked,
 		setEntities,
+		showOutOfMovesScreen,
+		showUnsolvableScreen,
 		showWinScreen,
 	]);
 

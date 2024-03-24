@@ -8,6 +8,7 @@ import { Navigation } from './features/ui/components/navigation';
 import { OutOfMovesScreen } from './features/ui/components/out-of-moves-screen';
 import { ScreenContainer } from './features/ui/components/screen-container';
 import { TitleScreen } from './features/ui/components/title-screen';
+import { UnsolvableScreen } from './features/ui/components/unsolvable-screen';
 import { WinScreen } from './features/ui/components/win-screen';
 
 const Game = () => (
@@ -18,6 +19,7 @@ const Game = () => (
 			<LevelsScreen />
 			<GameScreen />
 			<OutOfMovesScreen />
+			<UnsolvableScreen />
 			<WinScreen />
 		</ScreenContainer>
 	</Layout>

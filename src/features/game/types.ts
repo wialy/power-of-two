@@ -20,6 +20,7 @@ export type ScreenId =
 	| 'game'
 	| 'won'
 	| 'lost'
+	| 'unsolvable'
 	| 'title';
 
 export type Highscore = {
