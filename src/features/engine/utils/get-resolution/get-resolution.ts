@@ -4,16 +4,10 @@ import {
 	VECTOR_RIGHT,
 	VECTOR_UP,
 } from '../../constants';
-import {
-	Dice,
-	Entity,
-	Floor,
-	isDice,
-	isFloor,
-	Vector,
-} from '../../types/entities';
+import { Entity, isDice, isFloor, Vector } from '../../types/entities';
 import { getHash } from '../get-hash';
-import { getIsSameVector } from '../get-is-same-vector';
+import { getIsResolved } from '../get-is-resolved';
+import { getIsUnsolvable } from '../get-is-unsolvable';
 import { getNextBoardFinalState } from '../get-next-board-final-state';
 
 export type ResolutionStep = {
@@ -28,30 +22,6 @@ const DIRECTIONS = [VECTOR_UP, VECTOR_DOWN, VECTOR_LEFT, VECTOR_RIGHT];
 
 const MAX_ITERATIONS = 10_000;
 const MAX_STEP_EXECUTION_TIME = 40;
-
-const getIsResolved = ({
-	dices,
-	targetFloors,
-}: {
-	dices: Dice[];
-	targetFloors: Floor[];
-}) =>
-	targetFloors.length === dices.length &&
-	dices.every((dice) =>
-		targetFloors.some(
-			(floor) =>
-				floor.target === dice.value &&
-				getIsSameVector(floor.position, dice.position),
-		),
-	);
-
-const getIsLost = ({
-	dices,
-	targetFloors,
-}: {
-	dices: Dice[];
-	targetFloors: Floor[];
-}) => dices.length < targetFloors.length;
 
 // This function is not pure, it mutates the toResolve array
 const addStatesToResolve = ({
@@ -92,7 +62,7 @@ function* iterate({ entities }: { entities: Entity[] }) {
 	let iteration = 0;
 
 	const floors = entities.filter(isFloor);
-	const targetFloors = floors.filter((floor) => floor.target !== undefined);
+	const targets = floors.filter((floor) => floor.target !== undefined);
 
 	let executionStart = Date.now();
 
@@ -114,12 +84,12 @@ function* iterate({ entities }: { entities: Entity[] }) {
 
 		const dices = step.entities.filter(isDice);
 
-		if (getIsLost({ dices, targetFloors })) {
+		if (getIsUnsolvable({ dices, targets })) {
 			continue;
 		}
 
 		// Check if the current board state is resolved
-		if (getIsResolved({ dices, targetFloors })) {
+		if (getIsResolved({ dices, targets })) {
 			// Solution found
 			return step;
 		}
