@@ -36,6 +36,7 @@ const getIsResolved = ({
 	dices: Dice[];
 	targetFloors: Floor[];
 }) =>
+	targetFloors.length === dices.length &&
 	dices.every((dice) =>
 		targetFloors.some(
 			(floor) =>
