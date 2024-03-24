@@ -1,25 +1,31 @@
 import { expect, test } from 'vitest';
 
-import { VECTOR_UP, VECTOR_ZERO } from '../../constants';
+import { VECTOR_DOWN, VECTOR_UP } from '../../constants';
 import { ResolutionStep } from '../get-resolution';
 import { getResolutionSteps } from './';
 
 test('getResolutionSteps', () => {
-	const previousStep: ResolutionStep = {
+	const firstStep: ResolutionStep = {
 		entities: [],
 		iteration: 0,
 		previous: undefined,
-		velocity: VECTOR_ZERO,
 	};
 
-	const lastStep: ResolutionStep = {
+	const secondStep: ResolutionStep = {
+		entities: [],
+		iteration: 1,
+		previous: firstStep,
+		velocity: VECTOR_DOWN,
+	};
+
+	const thirdStep: ResolutionStep = {
 		entities: [],
 		iteration: 0,
-		previous: previousStep,
+		previous: secondStep,
 		velocity: VECTOR_UP,
 	};
 
-	const result = getResolutionSteps({ lastStep });
+	const result = getResolutionSteps({ resolution: thirdStep });
 
-	expect(result).toEqual([previousStep, lastStep]);
+	expect(result).toEqual([secondStep, thirdStep]);
 });

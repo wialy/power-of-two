@@ -1,13 +1,13 @@
 import { ResolutionStep } from '../get-resolution';
 
 export const getResolutionSteps = ({
-	lastStep,
+	resolution,
 }: {
-	lastStep: ResolutionStep;
+	resolution: ResolutionStep;
 }): ResolutionStep[] => {
 	const steps: ResolutionStep[] = [];
 
-	let currentStep: ResolutionStep | undefined = lastStep;
+	let currentStep: ResolutionStep | undefined = resolution;
 
 	while (currentStep) {
 		steps.unshift(currentStep);
@@ -15,5 +15,5 @@ export const getResolutionSteps = ({
 		currentStep = currentStep.previous;
 	}
 
-	return steps;
+	return steps.filter((step) => step.velocity);
 };
