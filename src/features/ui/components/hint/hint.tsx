@@ -1,8 +1,8 @@
-import { isMovable, Vector } from '../../../engine/types/entities';
+import { isMovable } from '../../../engine/types/entities';
 import { getResolution } from '../../../engine/utils/get-resolution';
+import { getResolutionSteps } from '../../../engine/utils/get-resolution-steps';
 import { useBoard } from '../../../game/hooks/use-board';
 import { useCoins } from '../../../game/hooks/use-coins';
-import { getArrowSymbol } from '../../utils/get-arrow-symbol';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import $$ from './hint.module.css';
@@ -15,36 +15,34 @@ export const Hint = () => {
 	const { coins, spendCoins } = useCoins();
 
 	const resolve = async () => {
-		let resolution = await getResolution({ entities });
-		let velocity: Vector | undefined;
+		const resolution = await getResolution({ entities });
 
-		let symbols = '';
-
-		while (resolution?.previous !== undefined) {
-			if (resolution.velocity !== undefined) {
-				symbols = getArrowSymbol(resolution.velocity) + symbols;
-				({ velocity } = resolution);
-			}
-
-			resolution = resolution.previous;
+		if (!resolution) {
+			return;
 		}
 
-		if (velocity) {
-			spendCoins(COST);
-			setEntities((current) =>
-				current.map((entity) => {
-					if (isMovable(entity)) {
-						return {
-							...entity,
-							isForced: true,
-							velocity,
-						};
-					}
+		const resolutionSteps = getResolutionSteps({ resolution });
 
-					return entity;
-				}),
-			);
+		const { velocity } = resolutionSteps[0];
+
+		if (!velocity) {
+			return;
 		}
+
+		spendCoins(COST);
+		setEntities((current) =>
+			current.map((entity) => {
+				if (isMovable(entity)) {
+					return {
+						...entity,
+						isForced: true,
+						velocity,
+					};
+				}
+
+				return entity;
+			}),
+		);
 	};
 
 	const handleClick = () => {

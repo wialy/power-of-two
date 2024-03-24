@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { VECTOR_ZERO } from '../../../engine/constants';
 import { Entity } from '../../../engine/types/entities';
 import { getResolution } from '../../../engine/utils/get-resolution';
+import { getResolutionSteps } from '../../../engine/utils/get-resolution-steps';
 import { getArrowSymbol } from '../../../ui/utils/get-arrow-symbol';
 
 export const useSolution = ({ entities }: { entities: Entity[] }) => {
@@ -12,20 +13,20 @@ export const useSolution = ({ entities }: { entities: Entity[] }) => {
 
 	const solve = useCallback(async () => {
 		setSolution('Solving...');
-		let resolutionStep = await getResolution({ entities });
+		const lastStep = await getResolution({ entities });
 
-		if (resolutionStep) {
-			setIterations(resolutionStep.iteration);
+		if (!lastStep) {
+			setSolution('💩 No solution');
+
+			return;
 		}
 
-		const symbols: string[] = [];
-		while (resolutionStep) {
-			if (resolutionStep.velocity) {
-				symbols.push(getArrowSymbol(resolutionStep.velocity ?? VECTOR_ZERO));
-			}
+		setIterations(lastStep.iteration);
 
-			resolutionStep = resolutionStep.previous;
-		}
+		const resolutionSteps = getResolutionSteps({ resolution: lastStep });
+		const symbols: string[] = resolutionSteps.map((step) =>
+			getArrowSymbol(step.velocity ?? VECTOR_ZERO),
+		);
 
 		if (symbols.length > 0) {
 			setSteps(symbols.length);

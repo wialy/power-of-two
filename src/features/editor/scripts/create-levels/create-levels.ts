@@ -4,30 +4,14 @@ import codenamize from '@codenamize/codenamize';
 
 import { VECTOR_ZERO } from '../../../engine/constants';
 import { Entity } from '../../../engine/types/entities';
-import {
-	getResolution,
-	ResolutionStep,
-} from '../../../engine/utils/get-resolution';
+import { getResolution } from '../../../engine/utils/get-resolution';
+import { getResolutionSteps } from '../../../engine/utils/get-resolution-steps';
 import { getArrowSymbol } from '../../../ui/utils/get-arrow-symbol';
 import { MAX_GRID_HEIGHT, MAX_GRID_WIDTH } from '../../constants';
 import { LevelRecord } from '../../types';
 import { createLevel } from '../../utils/create-level';
+import { getIdEntities } from '../../utils/get-id-entities';
 import { getLevelId } from '../../utils/get-level-id';
-
-const getResolutionSteps = ({ resolution }: { resolution: ResolutionStep }) => {
-	if (!resolution) {
-		return [];
-	}
-
-	const steps = [];
-	let resolutionStep: typeof resolution | undefined = resolution;
-	while (resolutionStep) {
-		steps.push(resolutionStep);
-		resolutionStep = resolutionStep.previous;
-	}
-
-	return steps.slice(0, -1);
-};
 
 export const getName = (id: string): string =>
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
@@ -52,7 +36,9 @@ export const createLevels = async ({
 			continue;
 		}
 
-		const resolution = await getResolution({ entities });
+		const levelId = getLevelId({ entities });
+
+		const resolution = await getResolution({ entities: getIdEntities(levelId) });
 
 		if (!resolution || !resolution.iteration) {
 			continue;
@@ -63,8 +49,6 @@ export const createLevels = async ({
 		if (steps.length < minSteps) {
 			continue;
 		}
-
-		const levelId = getLevelId({ entities });
 
 		const name = getName(levelId);
 
