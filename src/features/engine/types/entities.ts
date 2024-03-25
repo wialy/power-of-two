@@ -44,6 +44,22 @@ export type Floor = Entity & {
 export const isFloor = (entity: Pick<Entity, 'type'>): entity is Floor =>
 	entity.type === 'floor';
 
+export type Director = Entity & {
+	direction: Vector;
+	target: never;
+};
+
+export type Target = Entity & {
+	target: number;
+	direction: never;
+};
+
+export const isDirector = (entity: Pick<Entity, 'type'>): entity is Director =>
+	isFloor(entity) && 'direction' in entity;
+
+export const isTarget = (entity: Pick<Entity, 'type'>): entity is Target =>
+	isFloor(entity) && 'target' in entity;
+
 export type Dice = Movable & {
 	type: 'dice';
 	value: number;
