@@ -1,57 +1,37 @@
 [
   {
-    "levels": 7,
-    "name": "Doubtful Studio",
-    "symbols": "00ooooooooooow"
+    "levels": 25,
+    "name": "Evanescent Designer",
+    "symbols": "0012oooor"
   },
   {
-    "levels": 55,
-    "name": "Gigantic Priority",
-    "symbols": "00123ooot"
+    "levels": 30,
+    "name": "Legal Private",
+    "symbols": "0012mmoor"
   },
   {
-    "levels": 5,
-    "name": "Caring Face",
-    "symbols": "0Doooq"
+    "levels": 30,
+    "name": "Low Branch",
+    "symbols": "0012Ummoor"
   },
   {
-    "levels": 40,
-    "name": "Lethal Feedback",
-    "symbols": "0012RSoooooor"
+    "levels": 20,
+    "name": "Symptomatic Button",
+    "symbols": "000moqw"
   },
   {
-    "levels": 19,
-    "name": "Changeable Community",
-    "symbols": "00012ooooooqr"
+    "levels": 30,
+    "name": "Squalid Harm",
+    "symbols": "0012eemoo"
   },
   {
-    "levels": 81,
-    "name": "Hulking Natural",
-    "symbols": "00Doooqq"
+    "levels": 33,
+    "name": "Ragged Variation",
+    "symbols": "0000Dmmoww"
   },
   {
-    "levels": 328,
-    "name": "Glorious Department",
-    "symbols": "00Dmmooooooqq"
-  },
-  {
-    "levels": 57,
-    "name": "Low Raw",
-    "symbols": "00DRmmoooqq"
-  },
-  {
-    "levels": 36,
-    "name": "Fancy Tank",
-    "symbols": "00DRmmmooooooqq"
-  },
-  {
-    "levels": 17,
-    "name": "Evasive Shake",
-    "symbols": "000LRooooqw"
-  },
-  {
-    "levels": 39,
-    "name": "Overt Dog",
-    "symbols": "000LRmoooooooqw"
+    "levels": 12,
+    "name": "Impolite Champion",
+    "symbols": "000011LRee"
   }
 ]
