@@ -2,8 +2,8 @@
 	display: flex;
 	background-color: white;
 	flex-direction: column;
-	padding: 1rem;
-	border-radius: 0.5rem;
+	padding: 2rem 1rem;
+	border-radius: 1rem;
 	text-align: start;
 	appearance: none;
 	border: none;

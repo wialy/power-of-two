@@ -9,12 +9,12 @@
 
 .leftAction {
 	position: absolute;
-	left: 1rem;
+	left: 0.5rem;
 }
 
 .rightAction {
 	position: absolute;
-	right: 1rem;
+	right: 0.5rem;
 }
 
 .content {

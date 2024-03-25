@@ -99,7 +99,7 @@ const Preview = memo(({ id, isLocked }: { id: string; isLocked?: boolean }) => {
 	const height = bottomRight.y - topLeft.y;
 
 	return (
-		<div className={$$.previewContainer}>
+		<div className={clsx($$.previewContainer, { [$$.locked]: isLocked })}>
 			{Boolean(isLocked) && <div className={$$.lock}>🔒</div>}
 			{!isLocked && (
 				<pre
