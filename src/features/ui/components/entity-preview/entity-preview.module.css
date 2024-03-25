@@ -1,0 +1,88 @@
+.container {
+	display: flex;
+	width: 1.25rem;
+	height: 1.25rem;
+	flex-shrink: 0;
+	border-radius: 0.25rem;
+	justify-content: center;
+	align-items: center;
+	text-align: start;
+	appearance: none;
+	color: white;
+}
+
+.dice0 {
+	background-color: var(--color-orange);
+}
+
+.dice1 {
+	background-color: var(--color-yellow);
+}
+
+.dice2 {
+	background-color: var(--color-green);
+}
+
+.dice3 {
+	background-color: var(--color-teal);
+}
+
+.dice4 {
+	background-color: var(--color-blue);
+}
+
+.dice5 {
+	background-color: var(--color-purple);
+}
+
+.dice6 {
+	background-color: var(--color-red);
+}
+
+.movable {
+	background-color: var(--color-white);
+}
+
+.floor {
+	background-color: rgba(255, 255, 255, 0.15);
+}
+
+.director,
+.target {
+	border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.target0 {
+	border: 1px solid var(--color-orange);
+	color: var(--color-orange);
+}
+
+.target1 {
+	border: 1px solid var(--color-yellow);
+	color: var(--color-yellow);
+}
+
+.target2 {
+	border: 1px solid var(--color-green);
+	color: var(--color-green);
+}
+
+.target3 {
+	border: 1px solid var(--color-teal);
+	color: var(--color-teal);
+}
+
+.target4 {
+	border: 1px solid var(--color-blue);
+	color: var(--color-blue);
+}
+
+.target5 {
+	border: 1px solid var(--color-purple);
+	color: var(--color-purple);
+}
+
+.target6 {
+	border: 1px solid var(--color-red);
+	color: var(--color-red);
+}

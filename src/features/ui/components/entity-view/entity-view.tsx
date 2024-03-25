@@ -153,8 +153,6 @@ export const EntityView = ({
 					boxShadow,
 					fontSize: TILE_SIZE / 2.5,
 					height: size,
-					perspective: '30px',
-					perspectiveOrigin: '50% 50%',
 					transform: `translate(${-size / 2}px, ${-size / 2}px) scale(${scaleX}, ${scaleY})`,
 					transitionDuration: `${Number(MOVE_DURATION * 3)}ms`,
 					width: size,

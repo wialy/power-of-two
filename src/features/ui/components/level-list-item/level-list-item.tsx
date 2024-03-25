@@ -1,14 +1,13 @@
 import clsx from 'clsx';
 import { memo, useEffect, useRef } from 'react';
 
+import { ID_SYMBOLS } from '../../../editor/constants';
 import { LevelRecord } from '../../../editor/types';
-import { getIdEntities } from '../../../editor/utils/get-id-entities';
-import { getBounds } from '../../../engine/utils/get-bounds';
+import { getSymbolEntity } from '../../../editor/utils/get-symbol-entity';
 import { MAX_MOVES_MULTIPLIER } from '../../../game/constants';
 import { useGameState } from '../../../game/hooks/use-game-state';
 import { Highscore } from '../../../game/types';
-import { TILE_SIZE } from '../../constants';
-import { EntityView } from '../entity-view';
+import { EntityPreview } from '../entity-preview/entity-preview';
 import { Icon } from '../icon';
 import $$ from './level-list-item.module.css';
 
@@ -90,34 +89,30 @@ export const LevelListItem = ({
 	);
 };
 
-const SCALE = 0.2;
-
 const Preview = memo(({ id, isLocked }: { id: string; isLocked?: boolean }) => {
-	const entities = getIdEntities(id);
-	const { bottomRight, topLeft } = getBounds({ entities });
-	const width = bottomRight.x - topLeft.x;
-	const height = bottomRight.y - topLeft.y;
+	const rows = id.split(ID_SYMBOLS.delimiter).map((row) => [...row]);
 
 	return (
 		<div className={clsx($$.previewContainer, { [$$.locked]: isLocked })}>
 			{Boolean(isLocked) && <div className={$$.lock}>🔒</div>}
-			{!isLocked && (
-				<pre
-					style={{
-						height: height * TILE_SIZE * SCALE,
-						position: 'relative',
-						width: width * TILE_SIZE * SCALE,
-					}}
-				>
-					{entities.map((entity) => (
-						<EntityView
-							key={entity.id}
-							entity={entity}
-							scale={SCALE}
-						/>
-					))}
-				</pre>
-			)}
+			{!isLocked &&
+				rows.map((row, y) => (
+					<div
+						key={y}
+						className={$$.previewRow}
+					>
+						{row.map((symbol, x) => {
+							const entity = getSymbolEntity(symbol);
+
+							return (
+								<EntityPreview
+									key={x}
+									entity={entity}
+								/>
+							);
+						})}
+					</div>
+				))}
 		</div>
 	);
 });
