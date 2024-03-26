@@ -4,7 +4,13 @@ import { getIsSameVector } from '../../../engine/utils/get-is-same-vector';
 import { ID_SYMBOLS } from '../../constants';
 import { getEntitySymbol } from '../get-entity-symbol';
 
-export const getLevelId = ({ entities }: { entities: Entity[] }) => {
+export const getLevelId = ({
+	entities: initialEntities,
+}: {
+	entities: Entity[];
+}) => {
+	const entities = initialEntities.filter(({ isRemoved }) => !isRemoved);
+
 	const { bottomRight, topLeft } = getBounds({ entities });
 
 	const result = [];
