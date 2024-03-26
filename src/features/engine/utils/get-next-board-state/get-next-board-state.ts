@@ -36,9 +36,11 @@ const resolve = ({ current, next }: { current: Movable; next: Movable }) => {
 			remove: current as Dice,
 		});
 	} else {
-		next.velocity = getIsOppositeVector(current.velocity, next.velocity)
-			? getClone(VECTOR_ZERO)
-			: getClone(current.velocity);
+		if (getIsOppositeVector(current.velocity, next.velocity)) {
+			next.velocity = getClone(VECTOR_ZERO);
+		} else if (getIsSameVector(current.velocity, VECTOR_ZERO)) {
+			next.velocity = getClone(current.velocity);
+		}
 
 		current.velocity = getClone(VECTOR_ZERO);
 	}
