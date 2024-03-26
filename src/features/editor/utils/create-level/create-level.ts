@@ -226,7 +226,7 @@ export const createLevel = ({
 				positionIterator = getSumVector(positionIterator, direction);
 
 				nextFloor = getByPosition({
-					entities: result,
+					entities: result as Floor[],
 					filter: isFloor,
 					position: positionIterator,
 				});
