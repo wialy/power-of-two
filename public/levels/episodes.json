@@ -1,16 +1,16 @@
 [
   {
-    "levels": 25,
+    "levels": 40,
     "name": "Evanescent Designer",
     "symbols": "0012oooor"
   },
   {
-    "levels": 30,
+    "levels": 62,
     "name": "Legal Private",
     "symbols": "0012mmoor"
   },
   {
-    "levels": 30,
+    "levels": 53,
     "name": "Low Branch",
     "symbols": "0012Ummoor"
   },
@@ -20,22 +20,22 @@
     "symbols": "000moqw"
   },
   {
-    "levels": 30,
+    "levels": 35,
     "name": "Squalid Harm",
     "symbols": "0012eemoo"
   },
   {
-    "levels": 33,
+    "levels": 32,
     "name": "Ragged Variation",
     "symbols": "0000Dmmoww"
   },
   {
-    "levels": 30,
+    "levels": 32,
     "name": "Damp Ship",
     "symbols": "000DUmmooqw"
   },
   {
-    "levels": 12,
+    "levels": 25,
     "name": "Impolite Champion",
     "symbols": "000011LRee"
   }
