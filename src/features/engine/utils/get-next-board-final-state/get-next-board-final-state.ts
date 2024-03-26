@@ -28,22 +28,29 @@ export const getNextBoardFinalState = ({
 		entity.isFresh = false;
 	}
 
-	let nextEntities: Entity[] = entities;
-	let previousEntities: Entity[] = [];
+	let next: Entity[] = entities;
+	let current: Entity[] = [];
 
 	let iterations = 30;
 	do {
-		previousEntities = nextEntities;
-		nextEntities = getNextBoardState({ board: { entities: nextEntities } }).board
-			.entities;
+		current = next;
+		next = getNextBoardState({ board: { entities: next } }).board.entities;
 	} while (
-		getShouldUpdate({ entities: nextEntities, previousEntities }) &&
+		getShouldUpdate({ entities: next, previousEntities: current }) &&
 		iterations--
 	);
 
-	const result = previousEntities.map((entity) => ({
-		...entity,
-	}));
+	if (!iterations) {
+		throw new Error('Infinite loop detected');
+	}
 
-	return { entities: result };
+	for (const entity of current) {
+		delete entity.isFresh;
+
+		if (isMovable(entity)) {
+			delete entity.isForced;
+		}
+	}
+
+	return { entities: current };
 };

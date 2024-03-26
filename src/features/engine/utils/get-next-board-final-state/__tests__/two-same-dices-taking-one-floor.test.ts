@@ -30,7 +30,6 @@ test.only('two same dices taking one floor', () => {
 	expect(result?.entities).toHaveLength(5);
 	expect(result?.entities).toContainEqual(
 		expect.objectContaining({
-			isFresh: true,
 			position: { x: 0, y: 1 },
 			type: 'dice',
 			velocity: VECTOR_ZERO,
