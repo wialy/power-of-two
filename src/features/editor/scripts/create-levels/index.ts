@@ -9,11 +9,9 @@ import { Entity } from '../../../engine/types/entities';
 import { LevelRecord, SerializedLevelRecord } from '../../types';
 import { getParsedLevelRecord } from '../../utils/get-parsed-level-record';
 import { getSerializedLevelRecord } from '../../utils/get-serialized-level-record';
+import { getSortedLevels } from '../../utils/get-sorted-levels';
 import { getSymbolEntity } from '../../utils/get-symbol-entity';
 import { createLevels } from './create-levels';
-
-const getSortedLevels = (levels: LevelRecord[]) =>
-	levels.sort((a, b) => a.steps - b.steps || a.iterations - b.iterations);
 
 const serialize = (levels: LevelRecord[]) =>
 	`[\n\t${levels.map(getSerializedLevelRecord).join(',\n\t')}\n]`;

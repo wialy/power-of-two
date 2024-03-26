@@ -13,6 +13,7 @@
 		"test:levels": "vitest --disable-console-intercept=true --root ./src levels --run",
 		"generate:levels": "vite-node ./src/features/editor/scripts/create-levels/",
 		"generate:episodes": "vite-node ./src/features/editor/scripts/update-episodes/",
+		"fix:levels": "vite-node ./src/features/editor/scripts/fix-levels/",
 		"prepare": "husky"
 	},
 	"release": {
