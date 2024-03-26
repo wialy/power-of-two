@@ -27,11 +27,12 @@ test('one moving at stop', () => {
 test('movable at stop', () => {
 	const entities = [
 		createEntity('floor', { direction: VECTOR_ZERO, position: { x: 0, y: 0 } }),
-		createEntity('movable', { position: { x: 0, y: 0 }, velocity: VECTOR_ZERO }),
+		createEntity('floor', { position: { x: 1, y: 0 } }),
+		createEntity('movable', { position: { x: 0, y: 0 }, velocity: VECTOR_RIGHT }),
 	];
 	const result = getNextBoardState({ board: { entities } });
 	expect(result.board.entities).toBeDefined();
-	expect(result.board.entities).toHaveLength(2);
+	expect(result.board.entities).toHaveLength(3);
 	expect(result.board.entities).toEqual(
 		expect.arrayContaining([
 			expect.objectContaining({

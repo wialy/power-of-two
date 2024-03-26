@@ -1,205 +1,169 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import { VECTOR_ZERO } from '../../constants';
 import { Board } from '../../types/board';
-import {
-	Entity,
-	Floor,
-	isDice,
-	isFloor,
-	isMovable,
-	Movable,
-} from '../../types/entities';
+import { Dice, Director, isDice, Movable } from '../../types/entities';
 import { getByPosition } from '../get-by-position';
 import { getCanMerge } from '../get-can-merge';
 import { getClone } from '../get-clone';
-import { getIsMoving } from '../get-is-moving';
+import { getGroupedByType } from '../get-grouped-by-type';
 import { getIsOppositeVector } from '../get-is-opposite-vector';
+import { getIsSameVector } from '../get-is-same-vector';
+import { getOrderedCandidates } from '../get-ordered-candidates';
 import { getSumVector } from '../get-sum-vector';
-
-const getByType = (entities: Entity[]) => {
-	const movables: Movable[] = [];
-	const others: Entity[] = [];
-	const floors: Floor[] = [];
-
-	for (const entity of entities) {
-		if (isMovable(entity)) {
-			movables.push(entity);
-		} else if (isFloor(entity)) {
-			floors.push(entity);
-		} else {
-			others.push(entity);
-		}
-	}
-
-	return { floors, movables, others };
-};
+import { mergeDices } from '../merge-dices';
 
 const applyFloorDirection = ({
 	floor,
-	movable,
+	movables,
 }: {
-	floor?: Floor;
-	movable: Movable;
+	floor: Director;
+	movables: Movable[];
 }) => {
-	if (movable.isForced) {
-		return;
-	}
+	const movablesAtPosition = movables.filter(
+		(movable) =>
+			!movable.isForced && getIsSameVector(movable.position, floor.position),
+	);
 
-	if (floor) {
-		if (floor.direction !== undefined) {
-			movable.velocity = getClone(floor.direction);
-		}
-	} else {
-		movable.velocity = getClone(VECTOR_ZERO);
+	for (const movable of movablesAtPosition) {
+		movable.velocity = getClone(floor.direction);
 	}
 };
 
-const mergeDices = ({ first, second }: { first: Movable; second: Movable }) => {
-	if (!isDice(first) || !isDice(second)) {
-		return;
+const resolve = ({ current, next }: { current: Movable; next: Movable }) => {
+	if (getCanMerge(current, next)) {
+		mergeDices({
+			keep: next as Dice,
+			remove: current as Dice,
+		});
+	} else {
+		next.velocity = getIsOppositeVector(current.velocity, next.velocity)
+			? getClone(VECTOR_ZERO)
+			: getClone(current.velocity);
+
+		current.velocity = getClone(VECTOR_ZERO);
 	}
-
-	first.isRemoved = true;
-	first.position = getClone(second.position);
-	first.velocity = getClone(VECTOR_ZERO);
-
-	second.value++;
-	second.isFresh = true;
-	second.velocity = getClone(VECTOR_ZERO);
 };
 
 export const getNextBoardState = ({
-	board,
+	board: { entities: initialEntities },
 }: {
 	board: Board;
 }): { board: Board } => {
-	const entities = getClone(
-		board.entities.filter((entity) => !entity.isRemoved),
+	const entities = initialEntities
+		.filter(({ isRemoved }) => !isRemoved)
+		.map(getClone);
+
+	const { dices, directors, floors, movables, targets } = getGroupedByType({
+		entities,
+	});
+
+	const allMovables = [...dices, ...movables];
+	const allFloors = [...floors, ...directors, ...targets];
+
+	for (const director of directors) {
+		applyFloorDirection({ floor: director, movables: allMovables });
+	}
+
+	const toResolve = allMovables.filter(
+		({ velocity }) => !getIsSameVector(velocity, VECTOR_ZERO),
 	);
 
-	const { floors, movables, others } = getByType(entities);
-
-	for (const movable of movables) {
-		const floor = getByPosition({
-			entities: floors,
-			filter: isFloor,
-			position: movable.position,
-		});
-
-		if (!floor) {
-			movable.isRemoved = true;
-			movable.velocity = getClone(VECTOR_ZERO);
-
-			continue;
-		}
-
-		applyFloorDirection({
-			floor,
-			movable,
-		});
-	}
-
-	const toResolve = movables.filter(getIsMoving);
-
 	while (toResolve.length > 0) {
-		const current = toResolve.shift() as Movable;
+		const current = toResolve.shift();
 
-		const currentFloor = getByPosition({
-			entities: floors,
-			filter: isFloor,
-			position: current.position,
-		});
-
-		if (!currentFloor) {
-			continue;
+		if (!current) {
+			break;
 		}
 
-		const nextPosition = getSumVector(current.position, current.velocity);
+		const { position, velocity } = current;
+		const nextPosition = getSumVector(position, velocity);
 
 		const nextFloor = getByPosition({
-			entities: floors,
-			filter: isFloor,
+			entities: allFloors,
 			position: nextPosition,
 		});
 
-		// If the next position is not a floor, stop the current movable
 		if (!nextFloor) {
+			// stop the current movable
 			current.velocity = getClone(VECTOR_ZERO);
 
 			continue;
 		}
 
-		// Check for movable at the next position
-		const nextMovable = getByPosition({
-			entities: movables,
-			filter: isMovable,
+		const nextUnresolvedMovable = getByPosition({
+			entities: toResolve,
 			position: nextPosition,
 		});
 
-		if (!nextMovable) {
-			// Move the current movable to the next position
-			// when there is no next movable
-			current.position = getClone(nextPosition);
+		if (nextUnresolvedMovable) {
+			// resolve if the two movables are moving in opposite directions
+			if (getIsOppositeVector(current.velocity, nextUnresolvedMovable.velocity)) {
+				// resolve and remove next movable from the toResolve
+				resolve({ current, next: nextUnresolvedMovable });
 
-			continue;
-		}
-
-		// check if nextMovable is waiting to be resolved
-		if (toResolve.includes(nextMovable)) {
-			// check if the two movables are moving in opposite directions
-			if (getIsOppositeVector(current.velocity, nextMovable.velocity)) {
-				// check is the two movables can merge
-				if (getCanMerge(current, nextMovable)) {
-					mergeDices({ first: current, second: nextMovable });
-				} else {
-					// stop both movables
-					current.velocity = getClone(VECTOR_ZERO);
-					nextMovable.velocity = getClone(VECTOR_ZERO);
-				}
-
-				// remove nextMovable from the toResolve list
-				toResolve.splice(toResolve.indexOf(nextMovable), 1);
+				toResolve.splice(toResolve.indexOf(nextUnresolvedMovable), 1);
 			} else {
-				// add current after the nextMovable to the toResolve list
-				toResolve.splice(toResolve.indexOf(nextMovable) + 1, 0, current);
+				// add the current to the toResolve
+				toResolve.push(current);
 			}
 
 			continue;
 		}
 
-		if (getCanMerge(current, nextMovable)) {
-			mergeDices({ first: current, second: nextMovable });
-		} else {
-			if (!getIsMoving(nextMovable)) {
-				nextMovable.velocity = getClone(current.velocity);
+		const candidates = toResolve.filter((movable) =>
+			getIsSameVector(
+				getSumVector(movable.position, movable.velocity),
+				nextPosition,
+			),
+		);
+
+		const ordered = getOrderedCandidates({
+			candidates: [current, ...candidates],
+		}) as Movable[];
+
+		for (const movable of ordered) {
+			// remove movable from toResolve
+			const index = toResolve.indexOf(movable);
+			if (index !== -1) {
+				toResolve.splice(index, 1);
 			}
 
-			current.velocity = getClone(VECTOR_ZERO);
+			const candidateNextPosition = getSumVector(
+				movable.position,
+				movable.velocity,
+			);
+
+			const nextMovable = getByPosition({
+				entities: allMovables,
+				position: candidateNextPosition,
+			});
+
+			if (!nextMovable) {
+				movable.position = getClone(candidateNextPosition);
+
+				continue;
+			}
+
+			resolve({ current: movable, next: nextMovable });
 		}
 	}
 
-	for (const movable of movables) {
-		movable.isForced = false;
-
-		const floor = getByPosition({
-			entities: floors,
-			filter: isFloor,
-			position: movable.position,
-		});
-
-		applyFloorDirection({
-			floor,
-			movable,
-		});
+	for (const movable of allMovables) {
+		delete movable.isForced;
 
 		if (isDice(movable)) {
-			movable.isOnTarget = floor?.target === movable.value;
+			const target = getByPosition({
+				entities: targets,
+				position: movable.position,
+			});
+
+			movable.isOnTarget = target?.target === movable.value;
 		}
 	}
 
-	return {
-		board: {
-			entities: [...floors, ...movables, ...others],
-		},
-	};
+	for (const director of directors) {
+		applyFloorDirection({ floor: director, movables: allMovables });
+	}
+
+	return { board: { entities } };
 };

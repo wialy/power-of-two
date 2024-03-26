@@ -6,7 +6,7 @@ export const getByPosition = <T extends Entity>({
 	filter,
 	position,
 }: {
-	entities: Entity[];
+	entities: T[];
 	position: Vector;
 	filter?: (entity: Entity) => entity is T;
 }): T | undefined => {

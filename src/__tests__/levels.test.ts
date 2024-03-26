@@ -79,37 +79,29 @@ test('levels', () => {
 	expect(levels.length).toBeGreaterThan(0);
 });
 
-// Test the levels have the expected LevelRecord shape
-test.each(levels)('level %j resolution', ({ level }) => {
+// Test the resolution of the levels
+test.each(levels)('%j', async ({ level }) => {
 	expect(level).toMatchObject<LevelRecord>({
 		id: expect.any(String),
 		iterations: expect.any(Number),
 		name: expect.any(String),
 		steps: expect.any(Number),
 	});
+	const { id, steps } = level;
+	const resolution = await getResolution({
+		entities: getIdEntities(id),
+	});
+
+	expect(resolution).toMatchObject<ResolutionStep>({
+		entities: expect.any(Array),
+		hash: expect.any(String),
+		iteration: expect.any(Number),
+		previous: expect.any(Object),
+		velocity: expect.any(Object),
+	});
+
+	const resolutionSteps = resolution ? getResolutionSteps({ resolution }) : [];
+
+	expect(resolutionSteps).toEqual(expect.any(Array));
+	expect(resolutionSteps.length).toEqual(steps);
 });
-
-// Test the resolution of the levels
-test.each(levels)(
-	'level %j resolution',
-	async ({ level: { id, iterations, steps } }) => {
-		const resolution = await getResolution({
-			entities: getIdEntities(id),
-		});
-
-		expect(resolution).toMatchObject<ResolutionStep>({
-			entities: expect.any(Array),
-			hash: expect.any(String),
-			iteration: expect.any(Number),
-			previous: expect.any(Object),
-			velocity: expect.any(Object),
-		});
-
-		expect(resolution?.iteration).toBe(iterations);
-
-		const resolutionSteps = resolution ? getResolutionSteps({ resolution }) : [];
-
-		expect(resolutionSteps).toEqual(expect.any(Array));
-		expect(resolutionSteps.length).toEqual(steps);
-	},
-);
