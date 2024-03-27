@@ -1,0 +1,54 @@
+.levelInfo {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%) scale(0);
+	transition: transform 0.3s ease-in;
+	color: white;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	gap: 1em;
+	pointer-events: none;
+}
+
+.overlay {
+	position: absolute;
+	inset: 0;
+	background-color: rgba(0, 0, 0, 0.75);
+	opacity: 0;
+	transition: opacity 0.3s ease-in-out;
+	pointer-events: none;
+	cursor: pointer;
+	appearance: none;
+	outline: none;
+	border: none;
+}
+
+.overlay.visible {
+	opacity: 1;
+	pointer-events: all;
+}
+
+.levelInfo.visible {
+	transform: translate(-50%, -50%) scale(1) rotate(0);
+	transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.name {
+	font-size: 3em;
+	font-weight: bold;
+}
+
+.pro {
+	font-size: 2em;
+	display: flex;
+	align-items: center;
+	gap: 0.125em;
+}
+
+.pro svg {
+	color: var(--color-orange);
+}
