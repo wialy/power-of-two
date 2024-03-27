@@ -1,3 +1,5 @@
+import { useCallback, useMemo } from 'react';
+
 import { useEpisodeLevels } from '../../../editor/hooks/use-episode-levels';
 import { getParsedLevelRecord } from '../../../editor/utils/get-parsed-level-record';
 import { useGameState } from '../../../game/hooks/use-game-state';
@@ -10,6 +12,35 @@ export const LevelsView = () => {
 	const { isLoading, levels } = useEpisodeLevels({ episode });
 	const { highscores } = useHighscores();
 
+	const parsedLevels = useMemo(() => levels.map(getParsedLevelRecord), [levels]);
+
+	const getHighscore = useCallback(
+		(levelId: string) => highscores.find(({ levelId: id }) => id === levelId),
+		[highscores],
+	);
+
+	// sort by highscore and levels steps
+	const sortedLevels = useMemo(
+		() =>
+			parsedLevels.sort((a, b) => {
+				const highscoreA = getHighscore(a.id);
+				const highscoreB = getHighscore(b.id);
+
+				const stepsA = a.steps;
+				const stepsB = b.steps;
+
+				if ((highscoreA && highscoreB) || (!highscoreA && !highscoreB)) {
+					return stepsA - stepsB;
+				} else if (highscoreA) {
+					return -1;
+				}
+
+				return 1;
+			}),
+
+		[getHighscore, parsedLevels],
+	);
+
 	if (isLoading) {
 		return <div>Loading...</div>;
 	}
@@ -17,29 +48,24 @@ export const LevelsView = () => {
 	return (
 		<div className={$$.container}>
 			<div className={$$.levels}>
-				{levels.map((level, index) => {
-					const { id } = getParsedLevelRecord(level);
-					const highscore = highscores.find(({ levelId }) => levelId === id);
+				{sortedLevels.map((level, index) => {
+					const { id } = level;
+					const highscore = getHighscore(id);
 
 					let isLocked = false;
 					if (index > 0) {
-						const previousLevel = levels[index - 1];
-						const previousLevelId =
-							previousLevel && getParsedLevelRecord(previousLevel).id;
-
-						const previousHighscore = highscores.find(
-							({ levelId }) => levelId === previousLevelId,
-						);
+						const previousLevel = sortedLevels[index - 1];
+						const previousHighscore = getHighscore(previousLevel.id);
 
 						isLocked = previousHighscore === undefined;
 					}
 
 					return (
 						<LevelListItem
-							key={level}
+							key={id}
 							highscore={highscore}
 							isLocked={isLocked}
-							level={getParsedLevelRecord(level)}
+							level={level}
 						/>
 					);
 				})}
