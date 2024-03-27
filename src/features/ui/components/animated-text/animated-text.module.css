@@ -1,0 +1,60 @@
+@keyframes scaleLoop {
+	0% {
+		transform: scale(1);
+	}
+	33% {
+		transform: scale(1.1, 0.9) rotate(0.01turn) translateY(-0.025em);
+	}
+	66% {
+		transform: scale(0.9, 1.1) rotate(-0.01turn) translateY(0.025em);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+.animatedText {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 0.25em;
+	line-height: 100%;
+}
+
+.word {
+	display: flex;
+}
+
+.letter {
+	display: inline-block;
+	animation-name: scaleLoop;
+	animation-iteration-count: infinite;
+	animation-timing-function: ease-in-out;
+	transform-origin: center;
+}
+
+.speed0 {
+	animation-duration: 0.5s;
+}
+
+.speed1 {
+	animation-duration: 1s;
+}
+
+.speed2 {
+	animation-duration: 1.5s;
+}
+
+.speed3 {
+	animation-duration: 2s;
+}
+
+.speed4 {
+	animation-duration: 2.5s;
+}
+
+.speed5 {
+	animation-duration: 3s;
+}

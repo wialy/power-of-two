@@ -1,6 +1,7 @@
 import { useHotkeys } from 'react-hotkeys-hook';
 
 import { useGameState } from '../../../game/hooks/use-game-state';
+import { AnimatedText } from '../animated-text';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { useScreen } from '../screen/screen-provider';
@@ -25,7 +26,9 @@ export const OutOfMovesScreenContent = () => {
 
 	return (
 		<>
-			<h1>Out Of Moves</h1>
+			<h1>
+				<AnimatedText>Out Of Moves</AnimatedText>
+			</h1>
 			<div className={$$.buttons}>
 				<Button onClick={handleExitClick}>
 					<Icon name="exit" /> Exit

@@ -6,6 +6,7 @@ import { getParsedLevelRecord } from '../../../editor/utils/get-parsed-level-rec
 import { MAX_MOVES_MULTIPLIER } from '../../../game/constants';
 import { useGameState } from '../../../game/hooks/use-game-state';
 import { useResult } from '../../../game/hooks/use-result';
+import { AnimatedText } from '../animated-text';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { useScreen } from '../screen/screen-provider';
@@ -66,20 +67,32 @@ export const WinScreenContent = () => {
 
 	return (
 		<>
-			<h1>{title}</h1>
-			{lastReward !== 0 && <h2>Reward ${lastReward}</h2>}
+			<h1>
+				<AnimatedText>{title}</AnimatedText>
+			</h1>
+			{lastReward !== 0 && (
+				<h2>
+					<AnimatedText>{`Reward $${lastReward}`}</AnimatedText>
+				</h2>
+			)}
 			<div className={$$.stats}>
 				<div className={$$.stat}>
 					<div className={$$.title}>Moves</div>
-					<div className={$$.value}>{moves}</div>
+					<div className={$$.value}>
+						<AnimatedText>{`${moves}`}</AnimatedText>
+					</div>
 				</div>
 				<div className={$$.stat}>
 					<div className={$$.title}>Best</div>
-					<div className={$$.value}>{highscore ? highscore.moves : '-'}</div>
+					<div className={$$.value}>
+						<AnimatedText>{highscore ? `${highscore.moves}` : '-'}</AnimatedText>
+					</div>
 				</div>
 				<div className={$$.stat}>
 					<div className={$$.title}>Pro</div>
-					<div className={$$.value}>{pro}</div>
+					<div className={$$.value}>
+						<AnimatedText>{`${pro}`}</AnimatedText>
+					</div>
 				</div>
 			</div>
 

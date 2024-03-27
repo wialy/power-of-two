@@ -5,6 +5,7 @@ import { getSymbolEntity } from '../../../editor/utils/get-symbol-entity';
 import { Entity } from '../../../engine/types/entities';
 import { useGameState } from '../../../game/hooks/use-game-state';
 import { useHighscores } from '../../../game/hooks/use-highscores';
+import { AnimatedText } from '../animated-text';
 import { EntityPreview } from '../entity-preview/entity-preview';
 import { Icon } from '../icon';
 import $$ from './episode-list-item.module.css';
@@ -48,7 +49,9 @@ export const EpisodeListItem = ({ name, symbols }: EpisodeRecord) => {
 				setScreen('levels');
 			}}
 		>
-			<div className={$$.name}>{name}</div>
+			<div className={$$.name}>
+				<AnimatedText>{name}</AnimatedText>
+			</div>
 
 			<div className={$$.symbols}>
 				{entities.map((entity, index) => (

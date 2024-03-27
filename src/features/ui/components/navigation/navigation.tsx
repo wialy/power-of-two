@@ -3,6 +3,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { useEpisodes } from '../../../editor/hooks/use-episodes';
 import { useCoins } from '../../../game/hooks/use-coins';
 import { useGameState } from '../../../game/hooks/use-game-state';
+import { AnimatedText } from '../animated-text';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Screen } from '../screen';
@@ -29,8 +30,12 @@ const Episodes = () => (
 			<div className={$$.leftAction}>
 				<BackButton label="Back" />
 			</div>
-			<div className={$$.title}>Episodes</div>
-			<div className={$$.subtitle}>Please choose the episode</div>
+			<div className={$$.title}>
+				<AnimatedText>Episodes</AnimatedText>
+			</div>
+			<div className={$$.subtitle}>
+				<AnimatedText>Choose an episode</AnimatedText>
+			</div>
 		</div>
 	</Screen>
 );
@@ -47,8 +52,12 @@ const Levels = () => {
 				<div className={$$.leftAction}>
 					<BackButton label="Episodes" />
 				</div>
-				<div className={$$.title}>{currentEpisode?.name ?? ''}</div>
-				<div className={$$.subtitle}>Please choose the level</div>
+				<div className={$$.title}>
+					<AnimatedText>{currentEpisode?.name ?? ''}</AnimatedText>
+				</div>
+				<div className={$$.subtitle}>
+					<AnimatedText>Choose a level</AnimatedText>
+				</div>
 			</div>
 		</Screen>
 	);

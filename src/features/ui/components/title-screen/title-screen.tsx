@@ -1,6 +1,7 @@
 import { useHotkeys } from 'react-hotkeys-hook';
 
 import { useGameState } from '../../../game/hooks/use-game-state';
+import { AnimatedText } from '../animated-text';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Logo } from '../logo';
@@ -39,7 +40,7 @@ export const TitleScreen = () => {
 				onClick={handleStartClick}
 			>
 				<Icon name="pad" />
-				Play
+				<AnimatedText>Play</AnimatedText>
 			</Button>
 			<div className={$$.social}>
 				<Button

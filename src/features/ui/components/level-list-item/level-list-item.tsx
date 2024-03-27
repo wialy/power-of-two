@@ -7,6 +7,7 @@ import { getSymbolEntity } from '../../../editor/utils/get-symbol-entity';
 import { MAX_MOVES_MULTIPLIER } from '../../../game/constants';
 import { useGameState } from '../../../game/hooks/use-game-state';
 import { Highscore } from '../../../game/types';
+import { AnimatedText } from '../animated-text';
 import { EntityPreview } from '../entity-preview/entity-preview';
 import { Icon } from '../icon';
 import $$ from './level-list-item.module.css';
@@ -74,7 +75,9 @@ export const LevelListItem = ({
 		>
 			<Preview id={id} />
 			<div className={$$.info}>
-				<div className={$$.name}>{name}</div>
+				<div className={$$.name}>
+					<AnimatedText>{name}</AnimatedText>
+				</div>
 				<div className={$$.scores}>
 					{highscore !== undefined && <div>Best {highscore.moves}</div>}
 					<div>Pro {steps}</div>
