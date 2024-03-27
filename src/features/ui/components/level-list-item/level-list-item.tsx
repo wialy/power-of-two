@@ -97,7 +97,11 @@ const Preview = memo(({ id, isLocked }: { id: string; isLocked?: boolean }) => {
 
 	return (
 		<div className={clsx($$.previewContainer, { [$$.locked]: isLocked })}>
-			{Boolean(isLocked) && <div className={$$.lock}>🔒</div>}
+			{Boolean(isLocked) && (
+				<div className={$$.lock}>
+					<Icon name="lock" />
+				</div>
+			)}
 			{!isLocked &&
 				rows.map((row, y) => (
 					<div
