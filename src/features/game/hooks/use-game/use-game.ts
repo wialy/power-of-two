@@ -86,6 +86,10 @@ export const useGame = ({ disabled }: { disabled?: boolean }) => {
 			return;
 		}
 
+		if (!isMounted.current) {
+			return;
+		}
+
 		if (isLocked && !isAnimating) {
 			void (async () => {
 				await animate();
