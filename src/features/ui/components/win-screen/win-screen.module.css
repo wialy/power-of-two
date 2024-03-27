@@ -1,9 +1,13 @@
 .winScreen {
-	background-color: var(--color-orange);
+	background-color: var(--color-green);
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
+}
+
+.pro {
+	background-color: var(--color-yellow);
 }
 
 .buttons {

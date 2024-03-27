@@ -4,22 +4,20 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { useEpisodeLevels } from '../../../editor/hooks/use-episode-levels';
 import { getParsedLevelRecord } from '../../../editor/utils/get-parsed-level-record';
 import { MAX_MOVES_MULTIPLIER } from '../../../game/constants';
-import { useCoins } from '../../../game/hooks/use-coins';
 import { useGameState } from '../../../game/hooks/use-game-state';
-import { useHighscores } from '../../../game/hooks/use-highscores';
+import { useResult } from '../../../game/hooks/use-result';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { useScreen } from '../screen/screen-provider';
 import $$ from './win-screen.module.css';
 
 export const WinScreenContent = () => {
-	const { episode, level, maxMoves, moves, restart, setLevel, setScreen } =
+	const { episode, level, restart, setLevel, setMaxMoves, setScreen } =
 		useGameState();
 
-	const { lastReward } = useCoins();
+	const { highscore, lastReward, moves, pro, title } = useResult();
 
-	const { highscores } = useHighscores();
-	const { isFullyVisible } = useScreen();
+	const { isFullyVisible, isVisible } = useScreen();
 
 	const { isLoading, levels } = useEpisodeLevels({ episode });
 
@@ -49,10 +47,10 @@ export const WinScreenContent = () => {
 		}
 
 		const nextLevel = levels[levelIndex + 1];
-		const { id } = getParsedLevelRecord(nextLevel);
+		const { id, steps } = getParsedLevelRecord(nextLevel);
 
+		setMaxMoves(steps * MAX_MOVES_MULTIPLIER);
 		setLevel(id);
-
 		setScreen('game');
 	};
 
@@ -60,25 +58,11 @@ export const WinScreenContent = () => {
 		restart();
 	};
 
-	const highscore = highscores.find(({ levelId }) => levelId === level);
-
 	useHotkeys('ArrowLeft', handleExitClick, { enabled: isFullyVisible });
 	useHotkeys('ArrowRight', handleNextClick, { enabled: isFullyVisible });
 	useHotkeys('r', handleRestartClick, { enabled: isFullyVisible });
 
-	const pro = maxMoves / MAX_MOVES_MULTIPLIER;
-
-	const title = useMemo(() => {
-		if (moves === pro) {
-			return 'Like a pro!';
-		}
-
-		if (highscore && moves === highscore.moves) {
-			return 'Personal Best!';
-		}
-
-		return moves < maxMoves ? 'Great job!' : 'Last Call!';
-	}, [moves, pro, highscore, maxMoves]);
+	if (!isVisible) return null;
 
 	return (
 		<>
@@ -95,7 +79,7 @@ export const WinScreenContent = () => {
 				</div>
 				<div className={$$.stat}>
 					<div className={$$.title}>Pro</div>
-					<div className={$$.value}>{maxMoves / MAX_MOVES_MULTIPLIER}</div>
+					<div className={$$.value}>{pro}</div>
 				</div>
 			</div>
 
