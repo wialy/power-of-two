@@ -8,6 +8,7 @@ import { ScreenId } from './features/game/types';
 import { EpisodesScreen } from './features/ui/components/episodes-screen';
 import { GameScreen } from './features/ui/components/game-screen';
 import { Layout } from './features/ui/components/layout';
+import { LevelInfo } from './features/ui/components/level-info';
 import { LevelsScreen } from './features/ui/components/levels-screen';
 import { Navigation } from './features/ui/components/navigation';
 import { OutOfMovesScreen } from './features/ui/components/out-of-moves-screen';
@@ -44,6 +45,7 @@ const Game = () => {
 				<OutOfMovesScreen />
 				<UnsolvableScreen />
 				<WinScreen />
+				<LevelInfo />
 			</ScreenContainer>
 		</Layout>
 	);

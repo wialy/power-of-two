@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useEpisodeLevels } from '../../../editor/hooks/use-episode-levels';
 import { getParsedLevelRecord } from '../../../editor/utils/get-parsed-level-record';
@@ -20,43 +20,52 @@ export const LevelInfo = () => {
 
 	const timeoutReference = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-	useEffect(() => {
+	const cancelTimeout = useCallback(() => {
+		if (timeoutReference.current) {
+			clearTimeout(timeoutReference.current);
+			timeoutReference.current = null;
+		}
+	}, []);
+
+	const hide = useCallback(() => {
+		cancelTimeout();
+
+		setIsVisible(false);
+	}, [cancelTimeout]);
+
+	const show = useCallback(() => {
 		setIsVisible(true);
 
 		timeoutReference.current = setTimeout(() => {
 			setIsVisible(false);
 		}, DELAY);
-
-		return () => {
-			if (timeoutReference.current) {
-				clearTimeout(timeoutReference.current);
-				timeoutReference.current = null;
-			}
-		};
-	}, [level]);
-
-	const handleClick = () => {
-		if (timeoutReference.current) {
-			clearTimeout(timeoutReference.current);
-			timeoutReference.current = null;
-		}
-
-		setIsVisible(false);
-	};
+	}, []);
 
 	useEffect(() => {
-		window.addEventListener('keydown', handleClick);
+		if (!level) {
+			hide();
+
+			return;
+		}
+
+		show();
+
+		return cancelTimeout;
+	}, [cancelTimeout, hide, level, show]);
+
+	useEffect(() => {
+		window.addEventListener('keydown', hide);
 
 		return () => {
-			window.removeEventListener('keydown', handleClick);
+			window.removeEventListener('keydown', hide);
 		};
-	}, []);
+	}, [hide]);
 
 	return (
 		<>
 			<button
 				className={clsx($$.overlay, { [$$.visible]: isVisible })}
-				onClick={handleClick}
+				onClick={hide}
 			/>
 			<div className={clsx($$.levelInfo, { [$$.visible]: isVisible })}>
 				<Info
