@@ -1,7 +1,7 @@
 .container {
 	display: flex;
 	border-radius: 1rem;
-	background-color: white;
+	background-color: var(--color-orange);
 	appearance: none;
 	border: none;
 	cursor: pointer;
@@ -16,11 +16,11 @@
 }
 
 .container.pro {
-	/* background-color: var(--color-orange); */
+	background-color: var(--color-yellow);
 }
 
 .container.completed {
-	/* background-color: var(--color-green); */
+	background-color: var(--color-green);
 }
 
 .container.locked {
