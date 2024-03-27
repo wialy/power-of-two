@@ -18,14 +18,18 @@ export const useResult = () => {
 
 	const title = useMemo(() => {
 		if (moves === pro) {
-			return 'Like a pro!';
+			return 'Like a Pro!';
+		}
+
+		if (moves === maxMoves) {
+			return 'Close Call!';
 		}
 
 		if (highscore && moves === highscore.moves) {
 			return 'Personal Best!';
 		}
 
-		return moves < maxMoves ? 'Great job!' : 'Last Call!';
+		return 'Good Enough!';
 	}, [moves, pro, highscore, maxMoves]);
 
 	return {

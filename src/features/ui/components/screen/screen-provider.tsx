@@ -15,7 +15,7 @@ export const useScreen = () => useContext(screenContext);
 
 export const ScreenProvider = ({
 	children,
-	delay = 500,
+	delay = 1000,
 	isVisible,
 }: {
 	children: ReactNode;
