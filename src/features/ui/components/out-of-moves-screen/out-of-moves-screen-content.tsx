@@ -31,11 +31,11 @@ export const OutOfMovesScreenContent = () => {
 			</h1>
 			<div className={$$.buttons}>
 				<Button onClick={handleExitClick}>
-					<Icon name="exit" /> Exit
+					<Icon name="exit" />
 				</Button>
 				<Button onClick={handleRestartClick}>
 					<Icon name="restart" />
-					Restart
+					Restart level
 				</Button>
 			</div>
 		</>

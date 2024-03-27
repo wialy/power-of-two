@@ -32,11 +32,10 @@ export const UnsolvableScreenContent = () => {
 			<div className={$$.buttons}>
 				<Button onClick={handleExitClick}>
 					<Icon name="exit" />
-					Exit
 				</Button>
 				<Button onClick={handleRestartClick}>
 					<Icon name="restart" />
-					Restart
+					Restart level
 				</Button>
 			</div>
 		</>

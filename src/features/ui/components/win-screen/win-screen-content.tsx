@@ -99,14 +99,12 @@ export const WinScreenContent = () => {
 			<div className={$$.buttons}>
 				<Button onClick={handleExitClick}>
 					<Icon name="exit" />
-					Exit
 				</Button>
 				<Button onClick={handleRestartClick}>
 					<Icon name="restart" />
-					Restart
 				</Button>
 				<Button onClick={handleNextClick}>
-					Next
+					Next level
 					<Icon name="arrowRight" />
 				</Button>
 			</div>
