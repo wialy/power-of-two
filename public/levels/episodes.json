@@ -20,6 +20,11 @@
     "symbols": "0000DRUemmooo"
   },
   {
+    "levels": 36,
+    "name": "Makeshift Instruction",
+    "symbols": "0000DRUemmoooooo"
+  },
+  {
     "levels": 20,
     "name": "Symptomatic Button",
     "symbols": "000moqw"
