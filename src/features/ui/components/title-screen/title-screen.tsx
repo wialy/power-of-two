@@ -48,14 +48,14 @@ export const TitleScreen = () => {
 					onClick={handleDiscordClick}
 				>
 					<Icon name="discord" />
-					Join Discord
+					<span className={$$.label}>Join Discord</span>
 				</Button>
 				<Button
 					type="button"
 					onClick={handleTwitterClick}
 				>
 					<Icon name="x" />
-					Follow me
+					<span className={$$.label}>Follow me</span>
 				</Button>
 			</div>
 		</Screen>
