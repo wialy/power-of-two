@@ -1,9 +1,9 @@
-.soundToggle {
+.fullscreenToggle {
 	position: fixed;
 	bottom: 1rem;
-	left: 1rem;
+	right: 1rem;
 }
 
-.soundToggle svg {
+.fullscreenToggle svg {
 	color: var(--color-gray);
 }

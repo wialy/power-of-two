@@ -3,6 +3,7 @@ import './global.css';
 import { SoundToggle } from './features/sound/components/sound-toggle';
 import { useSounds } from './features/sound/hooks/use-sounds';
 import { EpisodesScreen } from './features/ui/components/episodes-screen';
+import { FullscreenToggle } from './features/ui/components/fullscreen-toggle';
 import { GameScreen } from './features/ui/components/game-screen';
 import { Layout } from './features/ui/components/layout';
 import { LevelInfo } from './features/ui/components/level-info';
@@ -30,6 +31,7 @@ const Game = () => {
 				<LevelInfo />
 			</ScreenContainer>
 			<SoundToggle />
+			<FullscreenToggle />
 		</Layout>
 	);
 };
