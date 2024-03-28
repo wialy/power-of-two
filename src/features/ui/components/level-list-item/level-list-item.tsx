@@ -7,6 +7,7 @@ import { getSymbolEntity } from '../../../editor/utils/get-symbol-entity';
 import { MAX_MOVES_MULTIPLIER } from '../../../game/constants';
 import { useGameState } from '../../../game/hooks/use-game-state';
 import { Highscore } from '../../../game/types';
+import { SOUND } from '../../../sound/constants';
 import { AnimatedText } from '../animated-text';
 import { EntityPreview } from '../entity-preview/entity-preview';
 import { Icon } from '../icon';
@@ -29,6 +30,8 @@ export const LevelListItem = ({
 		setLevel(id);
 		setMaxMoves(steps * MAX_MOVES_MULTIPLIER);
 		setScreen('game');
+
+		SOUND.click.play();
 	};
 
 	const reference = useRef<HTMLButtonElement>(null);

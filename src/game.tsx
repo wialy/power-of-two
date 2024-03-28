@@ -1,10 +1,7 @@
 import './global.css';
 
-import { useEffect } from 'react';
-
-import { useGameState } from './features/game/hooks/use-game-state';
-import { Music, useSound } from './features/game/hooks/use-sound';
-import { ScreenId } from './features/game/types';
+import { SoundToggle } from './features/sound/components/sound-toggle';
+import { useSounds } from './features/sound/hooks/use-sounds';
 import { EpisodesScreen } from './features/ui/components/episodes-screen';
 import { GameScreen } from './features/ui/components/game-screen';
 import { Layout } from './features/ui/components/layout';
@@ -17,23 +14,8 @@ import { TitleScreen } from './features/ui/components/title-screen';
 import { UnsolvableScreen } from './features/ui/components/unsolvable-screen';
 import { WinScreen } from './features/ui/components/win-screen';
 
-const MUSIC_MAP: Record<Music, ScreenId[]> = {
-	game: ['game'],
-	loose: ['lost', 'unsolvable'],
-	menu: ['title', 'episodes', 'levels'],
-};
-
 const Game = () => {
-	const { screen } = useGameState();
-	const { setMusic } = useSound();
-
-	useEffect(() => {
-		const music = Object.keys(MUSIC_MAP).find((key) =>
-			MUSIC_MAP[key as Music].includes(screen),
-		) as Music | undefined;
-
-		setMusic(music);
-	}, [screen, setMusic]);
+	useSounds();
 
 	return (
 		<Layout navigation={<Navigation />}>
@@ -47,6 +29,7 @@ const Game = () => {
 				<WinScreen />
 				<LevelInfo />
 			</ScreenContainer>
+			<SoundToggle />
 		</Layout>
 	);
 };

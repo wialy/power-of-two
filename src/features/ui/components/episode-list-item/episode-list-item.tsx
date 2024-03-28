@@ -5,6 +5,7 @@ import { getSymbolEntity } from '../../../editor/utils/get-symbol-entity';
 import { Entity } from '../../../engine/types/entities';
 import { useGameState } from '../../../game/hooks/use-game-state';
 import { useHighscores } from '../../../game/hooks/use-highscores';
+import { SOUND } from '../../../sound/constants';
 import { AnimatedText } from '../animated-text';
 import { EntityPreview } from '../entity-preview/entity-preview';
 import { Icon } from '../icon';
@@ -41,13 +42,17 @@ export const EpisodeListItem = ({ name, symbols }: EpisodeRecord) => {
 		getSymbolEntity(symbol),
 	) as Entity[];
 
+	const handleClick = () => {
+		setEpisode(symbols);
+		setScreen('levels');
+
+		SOUND.click.play();
+	};
+
 	return (
 		<button
 			className={$$.container}
-			onClick={() => {
-				setEpisode(symbols);
-				setScreen('levels');
-			}}
+			onClick={handleClick}
 		>
 			<div className={$$.name}>
 				<AnimatedText>{name}</AnimatedText>

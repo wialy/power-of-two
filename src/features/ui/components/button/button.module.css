@@ -26,8 +26,13 @@
 
 .button.small {
 	padding: 0 0.5em;
-	min-width: 2em;
-	height: 2em;
+	min-width: 2.5rem;
+	height: 2.5rem;
+}
+
+.button.small svg {
+	width: 1em;
+	height: 1em;
 }
 
 .button.large {

@@ -1,29 +1,10 @@
-import { Howl, Howler } from 'howler';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export const MUSIC = {
-	game: new Howl({
-		loop: true,
-		src: ['/sounds/loop-game.m4a'],
-	}),
-	loose: new Howl({
-		src: ['/sounds/loose.m4a'],
-	}),
-	menu: new Howl({
-		loop: true,
-		src: ['/sounds/loop-menu.m4a'],
-	}),
-} as const;
+import { MUSIC } from '../../constants';
+import { Music } from '../../types';
 
-MUSIC.menu.once('unlock', () => {
-	MUSIC.menu.play();
-});
-
-export type Music = keyof typeof MUSIC;
-Howler.autoUnlock = true;
-
-export const useSound = create(
+export const useSoundState = create(
 	persist<{
 		isMuted: boolean;
 		toggleMute: () => void;
@@ -36,8 +17,9 @@ export const useSound = create(
 			setMusic(music) {
 				if (get().music === music) return;
 
-				MUSIC.menu.stop();
-				MUSIC.game.stop();
+				for (const key in MUSIC) {
+					MUSIC[key as Music].stop();
+				}
 
 				if (music) {
 					MUSIC[music].play();
@@ -47,13 +29,13 @@ export const useSound = create(
 			},
 			toggleMute() {
 				const isMuted = !get().isMuted;
-				Howler.mute(isMuted);
 
 				set({ isMuted });
 			},
 		}),
 		{
 			name: 'sound',
+			partialize: ({ music, ...rest }) => ({ music: undefined, ...rest }),
 		},
 	),
 );
