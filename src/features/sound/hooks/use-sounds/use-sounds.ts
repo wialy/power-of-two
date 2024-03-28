@@ -11,6 +11,16 @@ export const useSounds = () => {
 	const { isMuted } = useSoundState();
 
 	useEffect(() => {
+		document.addEventListener('visibilitychange', () => {
+			if (document.visibilityState === 'hidden') {
+				Howler.mute(true);
+			} else {
+				Howler.mute(isMuted);
+			}
+		});
+	}, [isMuted]);
+
+	useEffect(() => {
 		Howler.mute(isMuted);
 	}, [isMuted]);
 };
