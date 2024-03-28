@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
+import screenfull from 'screenfull';
 
 import { Button } from '../button';
 import { Icon } from '../icon';
 import $$ from './fullscreen-toggle.module.css';
 
 export const FullscreenToggle = () => {
+	const [isEnabled, setIsEnabled] = useState(false);
 	const [isFullscreen, setIsFullscreen] = useState(false);
 
 	const toggleFullscreen = () => {
@@ -12,16 +14,26 @@ export const FullscreenToggle = () => {
 	};
 
 	useEffect(() => {
+		if (!isEnabled) {
+			return;
+		}
+
 		void (async () => {
 			try {
-				await (isFullscreen
-					? document.documentElement.requestFullscreen()
-					: document.exitFullscreen());
+				await (isFullscreen ? screenfull.request() : screenfull.exit());
 			} catch {
 				// Ignore
 			}
 		})();
-	}, [isFullscreen]);
+	}, [isEnabled, isFullscreen]);
+
+	useEffect(() => {
+		setIsEnabled(screenfull.isEnabled);
+	}, []);
+
+	if (!isEnabled) {
+		return null;
+	}
 
 	return (
 		<Button
