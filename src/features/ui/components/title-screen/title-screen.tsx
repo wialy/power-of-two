@@ -9,7 +9,7 @@ import { Screen } from '../screen';
 import $$ from './title-screen.module.css';
 
 const handleDiscordClick = () => {
-	window.open('https://discord.gg/DTBaDADspt', '_blank');
+	window.open('https://discord.gg/WzZHEMEV62', '_blank');
 };
 
 const handleTwitterClick = () => {
