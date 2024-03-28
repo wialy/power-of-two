@@ -12,11 +12,15 @@ export const FullscreenToggle = () => {
 	};
 
 	useEffect(() => {
-		if (isFullscreen) {
-			void document.documentElement.requestFullscreen();
-		} else {
-			void document.exitFullscreen();
-		}
+		void (async () => {
+			try {
+				await (isFullscreen
+					? document.documentElement.requestFullscreen()
+					: document.exitFullscreen());
+			} catch {
+				// Ignore
+			}
+		})();
 	}, [isFullscreen]);
 
 	return (
